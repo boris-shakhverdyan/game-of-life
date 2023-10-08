@@ -11,9 +11,9 @@ class Grass extends Creature {
         const newPos = this.chooseCell(EMPTYCELL_ID).random();
 
         if (newPos && this.multiply >= 4) {
-            Matrix.set(newPos, this.index);
-
             Entities.grass.push(new Grass(newPos));
+
+            Matrix.set(newPos, this.index);
 
             this.multiply = 0;
         }

@@ -84,8 +84,6 @@ io.on("connection", (socket: any) => {
             rabbit.die();
         });
 
-        console.log(Entities.grass);
-
         socket.emit("draw", {
             matrix: Matrix.get(),
             counts: Entities.counts(),

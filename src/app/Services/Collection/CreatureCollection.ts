@@ -3,6 +3,14 @@ import Position from "../Position/index.js";
 import Collection from "./index.js";
 
 class CreatureCollection<T extends Creature> extends Collection<T> {
+    public index: number;
+
+    constructor(index: number) {
+        super([]);
+
+        this.index = index;
+    }
+
     public deleteByPos(position: Position) {
         for (let index = 0; index < this._arr.length; index++) {
             if (

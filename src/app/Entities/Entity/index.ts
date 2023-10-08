@@ -13,11 +13,6 @@ abstract class Entity extends Creature {
         this.energy = 5;
     }
 
-    public chooseCell(character: number): Collection<Position> {
-        this.getNewCoordinates();
-        return super.chooseCell(character);
-    }
-
     public move() {
         const newPos = this.chooseCell(EMPTYCELL_ID).random();
 
@@ -30,8 +25,8 @@ abstract class Entity extends Creature {
         }
     }
 
-    public eat(index: number, entityCollection: CreatureCollection<any>, energy: number = 3) {
-        const newPos = this.chooseCell(index).random();
+    public eat(entityCollection: CreatureCollection<any>, energy: number = 3) {
+        const newPos = this.chooseCell(entityCollection.index).random();
 
         if (newPos) {
             Matrix.set(this.position, EMPTYCELL_ID);

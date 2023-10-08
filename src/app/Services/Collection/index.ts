@@ -1,10 +1,10 @@
 import Random from "../Random/index.js";
 
-class Collection<T>{
+class Collection<T> {
     protected _arr: Array<T>;
 
-    constructor(array: Array<T> = []) {
-        this._arr = array;
+    constructor(arr: Array<T>) {
+        this._arr = arr;
     }
 
     public get size(): number {

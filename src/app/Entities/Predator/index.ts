@@ -10,8 +10,8 @@ class Predator extends Entity {
     public index: number = PREDATOR_ID;
 
     public eat() {
-        super.eat(GRASSEATER_ID, Entities.grassEater);
-        super.eat(RABBIT_ID, Entities.rabbit);
+        super.eat(Entities.grassEater);
+        super.eat(Entities.rabbit);
     }
 
     public mul() {

@@ -12,10 +12,10 @@ class Human extends Entity {
     public index: number = HUMAN_ID;
 
     public eat() {
-        super.eat(GRASS_ID, Entities.grass);
-        super.eat(GRASSEATER_ID, Entities.grassEater, 5);
-        super.eat(PREDATOR_ID, Entities.predator, 2);
-        super.eat(RABBIT_ID, Entities.rabbit);
+        super.eat(Entities.grass);
+        super.eat(Entities.grassEater, 5);
+        super.eat(Entities.predator, 2);
+        super.eat(Entities.rabbit);
     }
 
     public mul() {

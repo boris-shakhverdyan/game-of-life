@@ -19,6 +19,10 @@ class Matrix {
         this._matrix[position.y][position.x] = value;
     }
 
+    public static isEqual(position: Position, value: number): boolean {
+        return this.getByPos(position) === value;
+    }
+
     public static get HEIGHT() {
         return this._matrix.length;
     }
@@ -38,14 +42,12 @@ class Matrix {
             this._matrix.push([]);
 
             for (let x = 0; x < width; x++) {
-                this._matrix[y][x] = 0;
+                this._matrix[y][x] = EMPTYCELL_ID;
             }
         }
 
         if (entitiesCount) {
-            entitiesCount.map((entityCount) =>
-                this.fillByEntity(entityCount)
-            );
+            entitiesCount.map((entityCount) => this.fillByEntity(entityCount));
         }
 
         return this;
@@ -64,17 +66,20 @@ class Matrix {
         const fill = () => {
             const position = this.random();
 
-            if(!cache.filter((item) => item.isEqual(position))[0] && this.getByPos(position) === EMPTYCELL_ID) {
+            if (
+                !cache.filter((item) => item.isEqual(position))[0] &&
+                this.getByPos(position) === EMPTYCELL_ID
+            ) {
                 this.set(position, entityCount.index);
                 cache.push(position);
                 return;
             }
-            
+
             fill();
         };
 
         repeat(entityCount.count, fill);
-        
+
         return this;
     }
 }

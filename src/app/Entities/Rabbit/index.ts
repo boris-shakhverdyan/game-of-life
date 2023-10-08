@@ -1,6 +1,5 @@
-import { EMPTYCELL_ID, GRASS_ID, RABBIT_ID } from "../../Constants/entities.js";
+import { RABBIT_ID } from "../../Constants/entities.js";
 import Entities from "../../Services/Entities/index.js";
-import Matrix from "../../Services/Matrix/index.js";
 import Position from "../../Services/Position/index.js";
 import Entity from "../Entity/index.js";
 
@@ -50,7 +49,7 @@ class Rabbit extends Entity {
     }
 
     public eat() {
-        super.eat(GRASS_ID, Entities.grass);
+        super.eat(Entities.grass);
     }
 
     public mul() {

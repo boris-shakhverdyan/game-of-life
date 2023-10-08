@@ -1,19 +1,36 @@
-let socket = io();
+const socket = io();
 
-var grassId = document.getElementById("Grass");
-var grassEaterId = document.getElementById("GrassEater");
-var predatorId = document.getElementById("Predator");
-var humanId = document.getElementById("Human");
-var rabbitId = document.getElementById("Rabbit");
+const grassId = document.getElementById("Grass");
+const grassEaterId = document.getElementById("GrassEater");
+const predatorId = document.getElementById("Predator");
+const humanId = document.getElementById("Human");
+const rabbitId = document.getElementById("Rabbit");
+
+const countOfIndex = (matrix, index) => {
+    let result = 0;
+
+    for(let y = 0; y < matrix.length; y++) {
+        for(let x = 0; x < matrix[0].length; x++) {
+            if(matrix[y][x] == index) {
+                result++;
+            }
+        }
+    }
+
+    return result;
+}
 
 function setup() {
     socket.on("draw", ({ matrix, counts }) => {
         console.log(matrix, counts);
+
+        console.log(countOfIndex(matrix, 1));
+
         const SIDE = 20;
         const BACKGROUND_COLOR = "#acacac";
 
         createCanvas(matrix[0].length * SIDE + 1, matrix.length * SIDE + 1);
-        strokeWeight(1);
+        strokeWeight(0);
         background(BACKGROUND_COLOR);
 
         for (let y = 0; y < matrix.length; y++) {

@@ -36,7 +36,7 @@ abstract class Creature {
                 position.y >= 0 &&
                 position.y < Matrix.HEIGHT
             ) {
-                if (Matrix.get()[position.y][position.x] == character) {
+                if (Matrix.isEqual(position, character)) {
                     found.push(position);
                 }
             }
