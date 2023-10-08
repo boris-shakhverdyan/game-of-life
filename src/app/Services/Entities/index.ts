@@ -14,11 +14,11 @@ class Entities {
 
     public static counts() {
         return {
-            grass: this.grass.length,
-            grassEater: this.grassEater.length,
-            predator: this.predator.length,
-            rabbit: this.rabbit.length,
-            human: this.human.length,
+            grass: this.grass.size,
+            grassEater: this.grassEater.size,
+            predator: this.predator.size,
+            rabbit: this.rabbit.size,
+            human: this.human.size,
         };
     }
 }

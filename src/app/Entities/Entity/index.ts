@@ -3,6 +3,7 @@ import CreatureCollection from "../../Services/Collection/CreatureCollection.js"
 import Matrix from "../../Services/Matrix/index.js";
 import Position from "../../Services/Position/index.js";
 import Creature from "../Creature/index.js";
+import Collection from "../../Services/Collection/index.js";
 
 abstract class Entity extends Creature {
     public energy: number;
@@ -10,6 +11,11 @@ abstract class Entity extends Creature {
     constructor(position: Position) {
         super(position);
         this.energy = 5;
+    }
+
+    public chooseCell(character: number): Collection<Position> {
+        this.getNewCoordinates();
+        return super.chooseCell(character);
     }
 
     public move() {

@@ -4,19 +4,19 @@ import Collection from "./index.js";
 
 class CreatureCollection<T extends Creature> extends Collection<T> {
     public deleteByPos(position: Position) {
-        for (let index = 0; index < this.length; index++) {
+        for (let index = 0; index < this._arr.length; index++) {
             if (
-                position.x === this[index].position.x &&
-                position.y === this[index].position.y
+                position.x === this._arr[index].position.x &&
+                position.y === this._arr[index].position.y
             ) {
-                this.splice(index, 1);
+                this._arr.splice(index, 1);
                 break;
             }
         }
     }
 
     public run(callbackfn: (value: T, index: number, array: T[]) => void) {
-        this.map(callbackfn);
+        this._arr.map(callbackfn);
     }
 }
 

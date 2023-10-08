@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from "express";
+import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import Matrix from "./app/Services/Matrix/index.js";
@@ -9,8 +9,9 @@ import GrassEater from "./app/Entities/GrassEater/index.js";
 import Predator from "./app/Entities/Predator/index.js";
 import Human from "./app/Entities/Human/index.js";
 import Rabbit from "./app/Entities/Rabbit/index.js";
+import { GRASS_ID, GRASSEATER_ID, PREDATOR_ID, HUMAN_ID, RABBIT_ID } from "./app/Constants/entities.js";
 
-const app: Express = express();
+const app = express();
 const server = createServer(app);
 const io = new Server(server);
 const PORT = 3000;
@@ -20,11 +21,11 @@ app.use(express.static("public"));
 // program start
 
 Matrix.generate(20, 20, [
-    { index: 1, count: 10 },
-    { index: 2, count: 4 },
-    { index: 3, count: 2 },
-    { index: 4, count: 1 },
-    { index: 5, count: 5 },
+    { index: GRASS_ID, count: 10 },
+    { index: GRASSEATER_ID, count: 4 },
+    { index: PREDATOR_ID, count: 2 },
+    { index: HUMAN_ID, count: 1 },
+    { index: RABBIT_ID, count: 5 },
 ]);
 
 for (let y = 0; y < Matrix.HEIGHT; y++) {
@@ -49,7 +50,7 @@ for (let y = 0; y < Matrix.HEIGHT; y++) {
     }
 }
 
-io.on("connection", (socket) => {
+io.on("connection", (socket: any) => {
     setInterval(() => {
         Entities.grass.run((grass) => {
             grass.mul();
@@ -83,11 +84,13 @@ io.on("connection", (socket) => {
             rabbit.die();
         });
 
+        console.log(Entities.grass);
+
         socket.emit("draw", {
             matrix: Matrix.get(),
             counts: Entities.counts(),
         });
-    }, 1000);
+    }, 3000);
 });
 
 // program end

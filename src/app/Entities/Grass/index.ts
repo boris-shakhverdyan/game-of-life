@@ -6,9 +6,9 @@ import Creature from "../Creature/index.js";
 class Grass extends Creature {
     public index: number = GRASS_ID;
 
-    mul() {
+    public mul() {
         this.multiply++;
-        let newPos = this.chooseCell(EMPTYCELL_ID).random();
+        const newPos = this.chooseCell(EMPTYCELL_ID).random();
 
         if (newPos && this.multiply >= 4) {
             Matrix.set(newPos, this.index);

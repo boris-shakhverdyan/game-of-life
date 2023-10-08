@@ -2,6 +2,7 @@ import { repeat } from "../../../helpers.js";
 import Position from "../Position/index.js";
 import Random from "../Random/index.js";
 import { TMatrix } from "./types.js";
+import { EMPTYCELL_ID } from "../../Constants/entities.js";
 
 class Matrix {
     private static _matrix: TMatrix<number>;
@@ -43,7 +44,7 @@ class Matrix {
 
         if (entitiesCount) {
             entitiesCount.map((entityCount) =>
-                this.fillByEntity(entityCount.index, entityCount.count)
+                this.fillByEntity(entityCount)
             );
         }
 
@@ -52,27 +53,28 @@ class Matrix {
 
     public static random(): Position {
         return new Position(
-            Random.number(0, this._matrix.length),
-            Random.number(0, this._matrix[0].length)
+            Random.number(0, this.WIDTH - 1),
+            Random.number(0, this.HEIGHT - 1)
         );
     }
 
-    public static fillByEntity(entityIndex: number, count: number) {
-        let cache: Position[] = [];
+    public static fillByEntity(entityCount: { index: number; count: number }) {
+        const cache: Position[] = [];
 
-        repeat(count, () => {
-            let position = this.random();
+        const fill = () => {
+            const position = this.random();
 
-            if (
-                !cache.find(
-                    (item) => item.x === position.x && item.y === position.y
-                )
-            ) {
-                this._matrix[position.y][position.x] = entityIndex;
+            if(!cache.filter((item) => item.isEqual(position))[0] && this.getByPos(position) === EMPTYCELL_ID) {
+                this.set(position, entityCount.index);
                 cache.push(position);
+                return;
             }
-        });
+            
+            fill();
+        };
 
+        repeat(entityCount.count, fill);
+        
         return this;
     }
 }

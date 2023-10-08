@@ -27,8 +27,7 @@ abstract class Creature {
 
     protected chooseCell(character: number): Collection<Position> {
         this.getNewCoordinates();
-
-        let found: Position[] = [];
+        const found: Position[] = [];
 
         for (let position of this.directions) {
             if (
