@@ -2,7 +2,8 @@ import { repeat } from "../../../helpers.js";
 import Position from "../Position/index.js";
 import Random from "../Random/index.js";
 import { TMatrix } from "./types.js";
-import { EMPTYCELL_ID } from "../../Constants/entities.js";
+import { EMPTYCELL_ID } from "../../../Constants/entities.js";
+import CreatureCollection from "../Collection/CreatureCollection.js";
 
 class Matrix {
     private static _matrix: TMatrix<number>;
@@ -34,7 +35,13 @@ class Matrix {
     public static generate(
         width: number,
         height: number,
-        entitiesCount: { index: number; count: number }[] | null = null
+        entitiesCount:
+            | {
+                  index: number;
+                  count: number;
+                  collection: CreatureCollection<any>;
+              }[]
+            | null = null
     ) {
         this._matrix = [];
 
@@ -54,13 +61,18 @@ class Matrix {
     }
 
     public static random(): Position {
-        return new Position(
-            Random.number(0, this.WIDTH - 1),
-            Random.number(0, this.HEIGHT - 1)
-        );
+        return new Position(Random.number(0, this.WIDTH - 1), Random.number(0, this.HEIGHT - 1));
     }
 
-    public static fillByEntity(entityCount: { index: number; count: number }) {
+    public static fillByEntity({
+        index,
+        count,
+        collection,
+    }: {
+        index: number;
+        count: number;
+        collection: CreatureCollection<any>;
+    }) {
         const cache: Position[] = [];
 
         const fill = () => {
@@ -68,9 +80,10 @@ class Matrix {
 
             if (
                 !cache.filter((item) => item.isEqual(position))[0] &&
-                this.getByPos(position) === EMPTYCELL_ID
+                this.isEqual(position, EMPTYCELL_ID)
             ) {
-                this.set(position, entityCount.index);
+                this.set(position, index);
+                collection.push(new collection.obj(position));
                 cache.push(position);
                 return;
             }
@@ -78,7 +91,7 @@ class Matrix {
             fill();
         };
 
-        repeat(entityCount.count, fill);
+        repeat(count, fill);
 
         return this;
     }

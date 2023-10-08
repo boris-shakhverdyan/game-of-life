@@ -4,7 +4,7 @@ import {
     HUMAN_ID,
     PREDATOR_ID,
     RABBIT_ID,
-} from "../../Constants/entities.js";
+} from "../../../Constants/entities.js";
 import Grass from "../../Entities/Grass/index.js";
 import GrassEater from "../../Entities/GrassEater/index.js";
 import Human from "../../Entities/Human/index.js";
@@ -13,15 +13,13 @@ import Rabbit from "../../Entities/Rabbit/index.js";
 import CreatureCollection from "../Collection/CreatureCollection.js";
 
 class Entities {
-    public static grass = new CreatureCollection<Grass>(GRASS_ID);
-    public static grassEater = new CreatureCollection<GrassEater>(
-        GRASSEATER_ID
-    );
-    public static predator = new CreatureCollection<Predator>(PREDATOR_ID);
-    public static rabbit = new CreatureCollection<Rabbit>(RABBIT_ID);
-    public static human = new CreatureCollection<Human>(HUMAN_ID);
+    public static grass = new CreatureCollection<Grass>(GRASS_ID, Grass);
+    public static grassEater = new CreatureCollection<GrassEater>(GRASSEATER_ID, GrassEater);
+    public static predator = new CreatureCollection<Predator>(PREDATOR_ID, Predator);
+    public static rabbit = new CreatureCollection<Rabbit>(RABBIT_ID, Rabbit);
+    public static human = new CreatureCollection<Human>(HUMAN_ID, Human);
 
-    public static counts() {
+    static counts() {
         return {
             grass: this.grass.size,
             grassEater: this.grassEater.size,

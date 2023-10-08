@@ -4,11 +4,17 @@ import Collection from "./index.js";
 
 class CreatureCollection<T extends Creature> extends Collection<T> {
     public index: number;
+    public obj: any;
 
-    constructor(index: number) {
+    constructor(index: number, obj: any) {
         super([]);
 
+        this.obj = obj;
         this.index = index;
+    }
+
+    public add(position: Position) {
+        this._arr.push(new this.obj(position));
     }
 
     public deleteByPos(position: Position) {

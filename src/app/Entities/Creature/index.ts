@@ -25,6 +25,30 @@ abstract class Creature {
         ];
     }
 
+    protected hasCell(character: number): boolean;
+    protected hasCell(characters: Array<number>): boolean;
+    protected hasCell(characters: number | Array<number>): boolean {
+        this.getNewCoordinates();
+
+        for (let position of this.directions) {
+            if (
+                position.x >= 0 &&
+                position.x < Matrix.WIDTH &&
+                position.y >= 0 &&
+                position.y < Matrix.HEIGHT
+            ) {
+                if (
+                    (Array.isArray(characters) && characters.includes(Matrix.getByPos(position))) ||
+                    (typeof characters === "number" && Matrix.isEqual(position, characters))
+                ) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     protected chooseCell(character: number): Collection<Position> {
         this.getNewCoordinates();
         const found: Position[] = [];
