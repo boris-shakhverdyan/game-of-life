@@ -1,3 +1,4 @@
+import CreatureCollection from "../../Services/Collection/CreatureCollection.js";
 import Collection from "../../Services/Collection/index.js";
 import Directions from "../../Services/Directions/index.js";
 import Matrix from "../../Services/Matrix/index.js";
@@ -6,8 +7,10 @@ import Position from "../../Services/Position/index.js";
 abstract class Creature {
     public position: Position;
     public abstract index: number;
-    public multiply: number = 0;
+    public energy: number = 50;
     public directions: Position[] = [];
+    public abstract type: number;
+    public abstract collection: CreatureCollection<any>;
 
     constructor(position: Position) {
         this.position = position;

@@ -4,6 +4,7 @@ import Random from "../Random/index.js";
 import { TMatrix } from "./types.js";
 import { EMPTYCELL_ID } from "../../../Constants/entities.js";
 import CreatureCollection from "../Collection/CreatureCollection.js";
+import Cache from "../Cache/index.js";
 
 class Matrix {
     private static _matrix: TMatrix<number>;
@@ -13,11 +14,11 @@ class Matrix {
     }
 
     public static getByPos(position: Position): number {
-        return this._matrix[position.y][position.x];
+        return this._matrix[position.y][position.x][position.type];
     }
 
-    public static set(position: Position, value: number) {
-        this._matrix[position.y][position.x] = value;
+    public static set(position: Position, value: number, type: number = -1) {
+        this._matrix[position.y][position.x][type >= 0 ? type : position.type] = value;
     }
 
     public static isEqual(position: Position, value: number): boolean {
@@ -32,12 +33,15 @@ class Matrix {
         return this._matrix[0].length;
     }
 
+    public static get DEPTH() {
+        return this._matrix[0][0].length;
+    }
+
     public static generate(
         width: number,
         height: number,
         entitiesCount:
             | {
-                  index: number;
                   count: number;
                   collection: CreatureCollection<any>;
               }[]
@@ -49,7 +53,7 @@ class Matrix {
             this._matrix.push([]);
 
             for (let x = 0; x < width; x++) {
-                this._matrix[y][x] = EMPTYCELL_ID;
+                this._matrix[y][x] = [EMPTYCELL_ID, EMPTYCELL_ID, EMPTYCELL_ID];
             }
         }
 
@@ -60,29 +64,24 @@ class Matrix {
         return this;
     }
 
-    public static random(): Position {
-        return new Position(Random.number(0, this.WIDTH - 1), Random.number(0, this.HEIGHT - 1));
+    public static random(type: number): Position {
+        return new Position(Random.number(0, this.WIDTH - 1), Random.number(0, this.HEIGHT - 1), type);
     }
 
     public static fillByEntity({
-        index,
         count,
         collection,
     }: {
-        index: number;
         count: number;
         collection: CreatureCollection<any>;
     }) {
-        const cache: Position[] = [];
+        const cache = new Cache<Position>();
 
         const fill = () => {
-            const position = this.random();
+            const position = this.random(collection.type);
 
-            if (
-                !cache.filter((item) => item.isEqual(position))[0] &&
-                this.isEqual(position, EMPTYCELL_ID)
-            ) {
-                this.set(position, index);
+            if (!cache.has(position) && this.isEqual(position, EMPTYCELL_ID)) {
+                this.set(position, collection.index);
                 collection.push(new collection.obj(position));
                 cache.push(position);
                 return;

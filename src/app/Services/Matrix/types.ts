@@ -1,1 +1,1 @@
-export type TMatrix<T> = T[][];
+export type TMatrix<T> = [T, T, T][][];

@@ -1,14 +1,14 @@
-import { GRASSEATER_ID, PREDATOR_ID, RABBIT_ID } from "../../../Constants/entities.js";
+import { ANIMAL_INDEX, GRASSEATER_ID, PREDATOR_ID, RABBIT_ID } from "../../../Constants/entities.js";
 import CreatureCollection from "../../Services/Collection/CreatureCollection.js";
-import Entities from "../../Services/Entities/index.js";
+import Entities from "../../Modules/Entities/index.js";
 import Entity from "../Entity/index.js";
+import Age from "../../Services/Age/index.js";
 
 class Predator extends Entity {
     public index: number = PREDATOR_ID;
-    public MAX_AGE: number = 30;
-    public OLD_AGE: number = 25;
-    public ADULT_AGE: number = 5;
+    public age: Age = new Age(30, 25, 5);
     public collection: CreatureCollection<Predator> = Entities.predator;
+    public type: number = ANIMAL_INDEX;
 
     public do() {
         super.do([

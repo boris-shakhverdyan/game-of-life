@@ -8,21 +8,19 @@ class Directions {
      * @param {Position} position position
      * @param {number} radius radius
      */
-    public static get(position: Position, radius: number) {
+    public static get(position: Position, radius: number, type: number = -1) {
         let result = [];
 
         let XRMinus = position.x - radius < 0 ? 0 : position.x - radius;
-        let XRPlus =
-            position.x + radius > Matrix.WIDTH - 1 ? Matrix.WIDTH - 1 : position.x + radius;
+        let XRPlus = position.x + radius > Matrix.WIDTH - 1 ? Matrix.WIDTH - 1 : position.x + radius;
         let YRMinus = position.y - radius < 0 ? 0 : position.y - radius;
-        let YRPlus =
-            position.y + radius > Matrix.HEIGHT - 1 ? Matrix.HEIGHT - 1 : position.y + radius;
+        let YRPlus = position.y + radius > Matrix.HEIGHT - 1 ? Matrix.HEIGHT - 1 : position.y + radius;
 
-        for (let i = YRMinus; i <= YRPlus; i++) {
-            for (let j = XRMinus; j <= XRPlus; j++) {
-                if (i === position.y && j === position.x) continue;
+        for (let y = YRMinus; y <= YRPlus; y++) {
+            for (let x = XRMinus; x <= XRPlus; x++) {
+                if (y === position.y && x === position.x) continue; // FIXME: GrassEater can't eat the grass under him.
 
-                result.push(new Position(j, i));
+                result.push(new Position(x, y, type >= 0 ? type : position.type));
             }
         }
 

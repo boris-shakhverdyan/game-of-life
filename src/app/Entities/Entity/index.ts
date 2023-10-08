@@ -1,39 +1,25 @@
 import { EMPTYCELL_ID } from "../../../Constants/entities.js";
+import Age from "../../Services/Age/index.js";
 import CreatureCollection from "../../Services/Collection/CreatureCollection.js";
 import Matrix from "../../Services/Matrix/index.js";
-import Position from "../../Services/Position/index.js";
 import Creature from "../Creature/index.js";
 
 abstract class Entity extends Creature {
-    public energy: number;
-    public age: number = 0;
-    public abstract MAX_AGE: number;
-    public abstract OLD_AGE: number;
-    public abstract ADULT_AGE: number;
-    public abstract collection: CreatureCollection<any>;
-
-    constructor(position: Position) {
-        super(position);
-        this.energy = 50;
-    }
-
-    public get isAdult(): boolean {
-        return this.age >= this.ADULT_AGE && this.age <= this.OLD_AGE;
-    }
+    public abstract age: Age;
 
     public do(eatable: { collection: CreatureCollection<any>; energy: number }[]) {
         if (this.energy <= 80 && this.hasCell(eatable.map((food) => food.collection.index))) {
             eatable.map((food) => this.eat(food.collection, food.energy));
-        } else if (this.isAdult && this.energy >= 80) {
+        } else if (this.age.isAdult && this.energy >= 80) {
             this.mul();
         } else {
             this.move();
         }
 
-        this.age += 1 / 40;
+        this.age.increase();
         this.energy -= 2;
 
-        if (this.age >= this.MAX_AGE || this.energy < 0) {
+        if (this.age.isDead || this.energy <= 0) {
             return this.die();
         }
     }
