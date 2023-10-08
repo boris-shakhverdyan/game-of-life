@@ -1,4 +1,5 @@
 import Collection from "../../Services/Collection/index.js";
+import Directions from "../../Services/Directions/index.js";
 import Matrix from "../../Services/Matrix/index.js";
 import Position from "../../Services/Position/index.js";
 
@@ -13,16 +14,7 @@ abstract class Creature {
     }
 
     protected getNewCoordinates() {
-        this.directions = [
-            new Position(this.position.x - 1, this.position.y - 1),
-            new Position(this.position.x, this.position.y - 1),
-            new Position(this.position.x + 1, this.position.y - 1),
-            new Position(this.position.x - 1, this.position.y),
-            new Position(this.position.x + 1, this.position.y),
-            new Position(this.position.x - 1, this.position.y + 1),
-            new Position(this.position.x, this.position.y + 1),
-            new Position(this.position.x + 1, this.position.y + 1),
-        ];
+        this.directions = Directions.small(this.position);
     }
 
     protected hasCell(character: number): boolean;
