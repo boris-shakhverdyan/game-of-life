@@ -25,6 +25,10 @@ class Matrix {
         return this.getByPos(position) === value;
     }
 
+    public static isEmptyCell(position: Position): boolean {
+        return this.getByPos(position) === EMPTYCELL_ID;
+    }
+
     public static get HEIGHT() {
         return this._matrix.length;
     }
@@ -80,7 +84,7 @@ class Matrix {
         const fill = () => {
             const position = this.random(collection.type);
 
-            if (!cache.has(position) && this.isEqual(position, EMPTYCELL_ID)) {
+            if (!cache.has(position) && this.isEmptyCell(position)) {
                 this.set(position, collection.index);
                 collection.push(new collection.obj(position));
                 cache.push(position);

@@ -9,53 +9,44 @@ const rabbitId = document.getElementById("Rabbit");
 const countOfIndex = (matrix, index) => {
     let result = 0;
 
-    for(let y = 0; y < matrix.length; y++) {
-        for(let x = 0; x < matrix[0].length; x++) {
-            if(matrix[y][x] == index) {
+    for (let y = 0; y < matrix.length; y++) {
+        for (let x = 0; x < matrix[0].length; x++) {
+            if (matrix[y][x] == index) {
                 result++;
             }
         }
     }
 
     return result;
-}
+};
 
 function setup() {
-    socket.on("draw", ({ matrix, counts }) => {
-        console.log(matrix, counts);
-
-        console.log(countOfIndex(matrix, 1));
+    socket.on("draw", ({ matrix, counts, entities }) => {
+        console.log(matrix, counts, entities);
 
         const SIDE = 20;
         const BACKGROUND_COLOR = "#acacac";
+        const SIDE_E = SIDE * 0.75;
 
         createCanvas(matrix[0].length * SIDE + 1, matrix.length * SIDE + 1);
-        strokeWeight(0);
         background(BACKGROUND_COLOR);
 
         for (let y = 0; y < matrix.length; y++) {
             for (let x = 0; x < matrix[y].length; x++) {
-                switch (matrix[y][x]) {
-                    case 1:
-                        fill("green");
-                        break;
-                    case 2:
-                        fill("yellow");
-                        break;
-                    case 3:
-                        fill("red");
-                        break;
-                    case 4:
-                        fill("purple");
-                        break;
-                    case 5:
-                        fill("blue");
-                        break;
-                    default:
-                        fill(BACKGROUND_COLOR);
-                }
+                entities.map((entity) => {
+                    if (matrix[y][x][entity.type] === entity.index) {
+                        strokeWeight(entity.type === 0 ? 1 : 0);
+                        fill(entity.color);
 
-                rect(x * SIDE, y * SIDE, SIDE, SIDE);
+                        switch (entity.type) {
+                            case 0:
+                                ellipse(SIDE * x + SIDE / 2, SIDE * y + SIDE / 2, SIDE_E, SIDE_E);
+                                break;
+                            case 1:
+                                rect(x * SIDE, y * SIDE, SIDE, SIDE);
+                        }
+                    }
+                });
             }
         }
 
