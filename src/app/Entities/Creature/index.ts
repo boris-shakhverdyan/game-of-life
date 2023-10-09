@@ -7,7 +7,7 @@ import Position from "../../Services/Position/index.js";
 abstract class Creature {
     public position: Position;
     public abstract index: number;
-    public energy: number = 50;
+    public energy: number = 100;
     public abstract type: number;
     public abstract collection: CreatureCollection<any>;
 
@@ -30,7 +30,11 @@ abstract class Creature {
                 position.y < Matrix.HEIGHT
             ) {
                 if (Matrix.isEqual(position, index)) {
-                    if (this.position.isEqual(position, false) || Matrix.isEmptyCell(position, this.type)) {
+                    if (
+                        this.position.isEqual(position, false) ||
+                        type === this.type ||
+                        Matrix.isEmptyCell(position, this.type)
+                    ) {
                         return true;
                     }
                 }
@@ -52,7 +56,11 @@ abstract class Creature {
                 position.y < Matrix.HEIGHT
             ) {
                 if (Matrix.isEqual(position, index)) {
-                    if (this.position.isEqual(position, false) || Matrix.isEmptyCell(position, this.type)) {
+                    if (
+                        this.position.isEqual(position, false) ||
+                        type === this.type ||
+                        Matrix.isEmptyCell(position, this.type)
+                    ) {
                         found.push(position);
                     }
                 }

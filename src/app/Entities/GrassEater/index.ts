@@ -9,14 +9,9 @@ class GrassEater extends Entity {
     public age: Age = new Age(50, 35, 10, 1);
     public collection: CreatureCollection<GrassEater> = Entities.grassEater;
     public type: number = ANIMAL_INDEX;
-
-    public do() {
-        super.do([{ collection: Entities.grass, energy: 30 }]);
-    }
-
-    public eat() {
-        super.eat(Entities.grass, 30);
-    }
+    public eatable: { collection: CreatureCollection<any>; energy: number }[] = [
+        { collection: Entities.grass, energy: 30 },
+    ];
 }
 
 export default GrassEater;

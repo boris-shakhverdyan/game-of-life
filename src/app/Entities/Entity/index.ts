@@ -3,30 +3,64 @@ import Age from "../../Services/Age/index.js";
 import CreatureCollection from "../../Services/Collection/CreatureCollection.js";
 import Matrix from "../../Services/Matrix/index.js";
 import Creature from "../Creature/index.js";
+import Actions from "../../Services/Actions/index.js";
 
 abstract class Entity extends Creature {
     public abstract age: Age;
     public lastChildMakePeriod: number = 0;
+    public actions: Actions<this> = new Actions(this);
+    public abstract eatable: { collection: CreatureCollection<any>; energy: number }[];
 
-    public do(eatable: { collection: CreatureCollection<any>; energy: number }[]) {
-        if (
-            this.energy <= 80 &&
-            eatable.filter(({ collection }) => this.hasCell(collection.index, collection.type)).length
-        ) {
-            eatable.map((food) => this.eat(food.collection, food.energy));
-        } else if (this.age.isAdult && this.energy >= 80 && this.lastChildMakePeriod >= 10) {
-            this.mul();
-        } else {
-            this.move();
-        }
+    public do() {
+        this.registerActions();
 
-        this.age.increase();
-        this.energy -= 2;
-        this.lastChildMakePeriod++;
+        this.actions.run();
+    }
 
-        if (this.age.isDead || this.energy <= 0) {
-            return this.die();
-        }
+    public registerActions() {
+        // EAT
+        this.actions.register((entity) => {
+            if (
+                entity.energy <= 80 &&
+                entity.eatable.filter(({ collection }) => entity.hasCell(collection.index, collection.type))
+                    .length
+            ) {
+                entity.eatable.map((food) => entity.eat(food.collection, food.energy));
+
+                return true;
+            }
+
+            return false;
+        });
+
+        // MUL
+        this.actions.register((entity) => {
+            if (entity.age.isAdult && entity.energy >= 80 && entity.lastChildMakePeriod >= 10) {
+                entity.mul();
+
+                return true;
+            }
+
+            return false;
+        });
+
+        // MOVE
+        this.actions.lastOfAll((entity) => {
+            entity.move();
+
+            return true;
+        });
+
+        // DIE
+        this.actions.finally((entity) => {
+            entity.age.increase();
+            entity.energy -= 2;
+            entity.lastChildMakePeriod++;
+
+            if (entity.age.isDead || entity.energy <= 0) {
+                entity.die();
+            }
+        });
     }
 
     public move() {
@@ -34,7 +68,7 @@ abstract class Entity extends Creature {
 
         if (newPos) {
             Matrix.set(this.position, EMPTYCELL_ID);
-            Matrix.set(newPos, this.index);
+            Matrix.set(newPos, this.index, this.type);
 
             this.position.set(newPos);
             this.energy -= 3;

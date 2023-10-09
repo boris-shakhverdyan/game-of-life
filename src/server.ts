@@ -25,18 +25,18 @@ app.use(express.static("public"));
 Matrix.generate(20, 20, [
     { collection: Entities.grass, count: 25 },
     { collection: Entities.grassEater, count: 2 },
-    // { collection: Entities.predator, count: 2 },
+    { collection: Entities.predator, count: 2 },
     // { collection: Entities.human, count: 1 },
-    // { collection: Entities.rabbit, count: 10 },
+    { collection: Entities.rabbit, count: 10 },
 ]);
 
 io.on("connection", (socket: any) => {
     setInterval(() => {
         Entities.grass.run((grass) => grass.mul());
         Entities.grassEater.run((grassEater) => grassEater.do());
-        // Entities.predator.run((predator) => predator.do());
+        Entities.predator.run((predator) => predator.do());
         // Entities.human.run((human) => human.do());
-        // Entities.rabbit.run((rabbit) => rabbit.do());
+        Entities.rabbit.run((rabbit) => rabbit.do());
 
         socket.emit("draw", {
             matrix: Matrix.get(),
