@@ -6,11 +6,15 @@ import Creature from "../Creature/index.js";
 
 abstract class Entity extends Creature {
     public abstract age: Age;
+    public lastChildMakePeriod: number = 0;
 
     public do(eatable: { collection: CreatureCollection<any>; energy: number }[]) {
-        if (this.energy <= 80 && this.hasCell(eatable.map((food) => food.collection.index))) {
+        if (
+            this.energy <= 80 &&
+            eatable.filter(({ collection }) => this.hasCell(collection.index, collection.type)).length
+        ) {
             eatable.map((food) => this.eat(food.collection, food.energy));
-        } else if (this.age.isAdult && this.energy >= 80) {
+        } else if (this.age.isAdult && this.energy >= 80 && this.lastChildMakePeriod >= 10) {
             this.mul();
         } else {
             this.move();
@@ -18,6 +22,7 @@ abstract class Entity extends Creature {
 
         this.age.increase();
         this.energy -= 2;
+        this.lastChildMakePeriod++;
 
         if (this.age.isDead || this.energy <= 0) {
             return this.die();
@@ -31,21 +36,22 @@ abstract class Entity extends Creature {
             Matrix.set(this.position, EMPTYCELL_ID);
             Matrix.set(newPos, this.index);
 
-            this.position = newPos;
+            this.position.set(newPos);
             this.energy -= 3;
         }
     }
 
     public eat(entityCollection: CreatureCollection<any>, energy: number = 30) {
-        const newPos = this.chooseCell(entityCollection.index).random();
+        const newPos = this.chooseCell(entityCollection.index, entityCollection.type).random();
 
         if (newPos) {
             Matrix.set(this.position, EMPTYCELL_ID);
-            Matrix.set(newPos, this.index);
+            Matrix.set(newPos, EMPTYCELL_ID);
+            Matrix.set(newPos, this.index, this.type);
 
             entityCollection.deleteByPos(newPos);
 
-            this.position = newPos;
+            this.position.set(newPos);
             this.energy += energy;
         }
     }
@@ -57,11 +63,12 @@ abstract class Entity extends Creature {
             this.collection.add(newPos);
             Matrix.set(newPos, this.index);
             this.energy = 15;
+            this.lastChildMakePeriod = 0;
         }
     }
 
     public die() {
-        Matrix.set(this.position, EMPTYCELL_ID);
+        Matrix.setEmpty(this.position);
 
         this.collection.deleteByPos(this.position);
     }

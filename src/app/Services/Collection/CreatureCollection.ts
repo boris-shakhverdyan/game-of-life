@@ -17,15 +17,14 @@ class CreatureCollection<T extends Creature> extends Collection<T> {
 
     public add(position: Position) {
         this._arr.push(new this.obj(position));
+
+        return this;
     }
 
     public deleteByPos(position: Position) {
-        for (let index = 0; index < this._arr.length; index++) {
-            if (position.x === this._arr[index].position.x && position.y === this._arr[index].position.y) {
-                this._arr.splice(index, 1);
-                break;
-            }
-        }
+        this._arr = this._arr.filter((item) => !position.isEqual(item.position));
+
+        return this;
     }
 
     public run(callbackfn: (value: T, index: number, array: T[]) => void) {

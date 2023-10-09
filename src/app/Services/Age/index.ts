@@ -21,11 +21,7 @@ class Age {
     }
 
     increase(value: number = 1 / this.TIMES_PER_YEAR): Age {
-        if (this._value + value < this.MAX) {
-            this._value += value;
-        } else {
-            this._value = this.MAX;
-        }
+        this._value += value;
 
         return this;
     }

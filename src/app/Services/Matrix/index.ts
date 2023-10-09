@@ -13,20 +13,24 @@ class Matrix {
         return this._matrix;
     }
 
-    public static getByPos(position: Position): number {
-        return this._matrix[position.y][position.x][position.type];
+    public static getByPos(position: Position, type: number = position.type): number {
+        return this._matrix[position.y][position.x][type];
     }
 
-    public static set(position: Position, value: number, type: number = -1) {
-        this._matrix[position.y][position.x][type >= 0 ? type : position.type] = value;
+    public static set(position: Position, value: number, type: number = position.type) {
+        this._matrix[position.y][position.x][type] = value;
     }
 
-    public static isEqual(position: Position, value: number): boolean {
-        return this.getByPos(position) === value;
+    public static setEmpty(position: Position, type: number = position.type) {
+        this._matrix[position.y][position.x][type] = EMPTYCELL_ID;
     }
 
-    public static isEmptyCell(position: Position): boolean {
-        return this.getByPos(position) === EMPTYCELL_ID;
+    public static isEqual(position: Position, value: number, type: number = position.type): boolean {
+        return this.getByPos(position, type) === value;
+    }
+
+    public static isEmptyCell(position: Position, type: number = position.type): boolean {
+        return this.getByPos(position, type) === EMPTYCELL_ID;
     }
 
     public static get HEIGHT() {

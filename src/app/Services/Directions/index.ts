@@ -8,7 +8,7 @@ class Directions {
      * @param {Position} position position
      * @param {number} radius radius
      */
-    public static get(position: Position, radius: number, type: number = -1) {
+    public static get(position: Position, radius: number, type: number = position.type) {
         let result = [];
 
         let XRMinus = position.x - radius < 0 ? 0 : position.x - radius;
@@ -18,7 +18,7 @@ class Directions {
 
         for (let y = YRMinus; y <= YRPlus; y++) {
             for (let x = XRMinus; x <= XRPlus; x++) {
-                if (y === position.y && x === position.x) continue; // FIXME: GrassEater can't eat the grass under him.
+                if (y === position.y && x === position.x && position.type === type) continue;
 
                 result.push(new Position(x, y, type >= 0 ? type : position.type));
             }

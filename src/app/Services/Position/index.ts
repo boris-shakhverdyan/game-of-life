@@ -11,12 +11,25 @@ class Position implements ICacheable<Position> {
         this.type = type;
     }
 
-    public isEqual({ x, y, type }: Position): boolean {
-        if (this.x === x && this.y === y && this.type === type) {
-            return true;
+    public isEqual({ x, y, type }: Position, isStrict: boolean = true): boolean {
+        if (this.x === x && this.y === y) {
+            if (isStrict && this.type === type) {
+                return true;
+            } else if (!isStrict && this.type !== type) {
+                return true;
+            }
         }
 
         return false;
+    }
+
+    public set({ x, y, type }: Position, withType: boolean = false) {
+        this.x = x;
+        this.y = y;
+
+        if (withType) {
+            this.type = type;
+        }
     }
 }
 

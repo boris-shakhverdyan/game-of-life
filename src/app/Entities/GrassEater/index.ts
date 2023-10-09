@@ -6,7 +6,7 @@ import Age from "../../Services/Age/index.js";
 
 class GrassEater extends Entity {
     public index: number = GRASSEATER_ID;
-    public age: Age = new Age(50, 35, 10);
+    public age: Age = new Age(50, 35, 10, 1);
     public collection: CreatureCollection<GrassEater> = Entities.grassEater;
     public type: number = ANIMAL_INDEX;
 

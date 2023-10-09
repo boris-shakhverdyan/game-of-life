@@ -8,7 +8,6 @@ abstract class Creature {
     public position: Position;
     public abstract index: number;
     public energy: number = 50;
-    public directions: Position[] = [];
     public abstract type: number;
     public abstract collection: CreatureCollection<any>;
 
@@ -16,27 +15,24 @@ abstract class Creature {
         this.position = position;
     }
 
-    protected getNewCoordinates() {
-        this.directions = Directions.small(this.position);
+    protected getCoordinates(type: number = this.type, radius: number = 1) {
+        return Directions.get(this.position, radius, type);
     }
 
-    protected hasCell(character: number): boolean;
-    protected hasCell(characters: Array<number>): boolean;
-    protected hasCell(characters: number | Array<number>): boolean {
-        this.getNewCoordinates();
+    protected hasCell(index: number, type: number = this.type): boolean {
+        const directions = this.getCoordinates(type);
 
-        for (let position of this.directions) {
+        for (let position of directions) {
             if (
                 position.x >= 0 &&
                 position.x < Matrix.WIDTH &&
                 position.y >= 0 &&
                 position.y < Matrix.HEIGHT
             ) {
-                if (
-                    (Array.isArray(characters) && characters.includes(Matrix.getByPos(position))) ||
-                    (typeof characters === "number" && Matrix.isEqual(position, characters))
-                ) {
-                    return true;
+                if (Matrix.isEqual(position, index)) {
+                    if (this.position.isEqual(position, false) || Matrix.isEmptyCell(position, this.type)) {
+                        return true;
+                    }
                 }
             }
         }
@@ -44,19 +40,21 @@ abstract class Creature {
         return false;
     }
 
-    protected chooseCell(character: number): Collection<Position> {
-        this.getNewCoordinates();
+    protected chooseCell(index: number, type: number = this.type): Collection<Position> {
+        const directions = this.getCoordinates(type);
         const found: Position[] = [];
 
-        for (let position of this.directions) {
+        for (let position of directions) {
             if (
                 position.x >= 0 &&
                 position.x < Matrix.WIDTH &&
                 position.y >= 0 &&
                 position.y < Matrix.HEIGHT
             ) {
-                if (Matrix.isEqual(position, character)) {
-                    found.push(position);
+                if (Matrix.isEqual(position, index)) {
+                    if (this.position.isEqual(position, false) || Matrix.isEmptyCell(position, this.type)) {
+                        found.push(position);
+                    }
                 }
             }
         }
