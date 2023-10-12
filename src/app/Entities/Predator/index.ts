@@ -1,4 +1,4 @@
-import { ANIMAL_INDEX, GRASSEATER_ID, PREDATOR_ID, RABBIT_ID } from "../../../Constants/entities.js";
+import { ANIMAL_INDEX, PREDATOR_ID } from "../../../Constants/entities.js";
 import Entities from "../../Modules/Entities/index.js";
 import Entity from "../Entity/index.js";
 import Age from "../../Services/Age/index.js";
@@ -13,6 +13,28 @@ class Predator extends Entity {
         { collection: Entities.grassEater, energy: 70 },
         { collection: Entities.rabbit, energy: 25 },
     ];
+
+    public registerActions(): void {
+        super.registerActions();
+
+        // ATTACK
+        this.actions.register((entity) => {
+            if (
+                this.eatable.filter((food) => entity.hasCell(food.collection.index, food.collection.type, 2))
+                    .length &&
+                entity.energy <= 70
+            ) {
+                this.attack();
+                return true;
+            }
+
+            return false;
+        });
+    }
+
+    public attack() {
+        this.eatable.map((food) => this.eat(food.collection, food.energy, 2));
+    }
 }
 
 export default Predator;

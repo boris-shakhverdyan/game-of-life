@@ -4,6 +4,7 @@ import CreatureCollection from "../../Services/Collection/CreatureCollection.js"
 import Matrix from "../../Services/Matrix/index.js";
 import Creature from "../Creature/index.js";
 import Actions from "../../Services/Actions/index.js";
+import Position from "../../Services/Position/index.js";
 
 abstract class Entity extends Creature {
     public abstract age: Age;
@@ -63,20 +64,18 @@ abstract class Entity extends Creature {
         });
     }
 
-    public move() {
-        const newPos = this.chooseCell(EMPTYCELL_ID).random();
-
+    public move(newPos: Position = this.chooseCell(EMPTYCELL_ID).random(), energy: number = 3) {
         if (newPos) {
             Matrix.set(this.position, EMPTYCELL_ID);
             Matrix.set(newPos, this.index, this.type);
 
             this.position.set(newPos);
-            this.energy -= 3;
+            this.energy -= energy;
         }
     }
 
-    public eat(entityCollection: CreatureCollection<any>, energy: number = 30) {
-        const newPos = this.chooseCell(entityCollection.index, entityCollection.type).random();
+    public eat(entityCollection: CreatureCollection<any>, energy: number = 30, radius: number = this.radius) {
+        const newPos = this.chooseCell(entityCollection.index, entityCollection.type, radius).random();
 
         if (newPos) {
             Matrix.set(this.position, EMPTYCELL_ID);

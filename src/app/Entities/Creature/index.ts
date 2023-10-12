@@ -10,17 +10,36 @@ abstract class Creature {
     public energy: number = 100;
     public abstract type: number;
     public abstract collection: CreatureCollection<any>;
+    public radius: number = 1;
 
     constructor(position: Position) {
         this.position = position;
     }
 
-    protected getCoordinates(type: number = this.type, radius: number = 1) {
-        return Directions.get(this.position, radius, type);
+    protected getCoordinates(
+        type: number = this.type,
+        radius: number = this.radius,
+        position: Position = this.position
+    ) {
+        return Directions.get(position, radius, type);
     }
 
-    protected hasCell(index: number, type: number = this.type): boolean {
-        const directions = this.getCoordinates(type);
+    protected diffCoordinates(targetPosition: Position, radius: number = this.radius): Collection<Position> {
+        const targetAround = this.getCoordinates(targetPosition.type, radius, targetPosition);
+        const myDirections = this.getCoordinates();
+        const result: Position[] = [];
+
+        for (let pos of myDirections) {
+            if (!targetAround.filter((item) => item.isEqual(pos)).length) {
+                result.push(pos);
+            }
+        }
+
+        return new Collection(result);
+    }
+
+    protected hasCell(index: number, type: number = this.type, radius: number = this.radius): boolean {
+        const directions = this.getCoordinates(type, radius);
 
         for (let position of directions) {
             if (
@@ -44,8 +63,12 @@ abstract class Creature {
         return false;
     }
 
-    protected chooseCell(index: number, type: number = this.type): Collection<Position> {
-        const directions = this.getCoordinates(type);
+    protected chooseCell(
+        index: number,
+        type: number = this.type,
+        radius: number = this.radius
+    ): Collection<Position> {
+        const directions = this.getCoordinates(type, radius);
         const found: Position[] = [];
 
         for (let position of directions) {
