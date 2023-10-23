@@ -3,3 +3,4 @@ import { TPROGRAM } from "../app/Services/Program/types.js";
 
 export const PORT = 3000;
 export const DEFAULT_PROGRAM_STATUS: TPROGRAM = PROGRAM_RUN;
+export const DEBUG_MODE = false;

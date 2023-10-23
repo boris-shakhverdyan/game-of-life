@@ -10,7 +10,7 @@
         <div id="troubleshootingAlert" class="hide">
             <h3>CONNECTION ERROR</h3>
         </div>
-        <table>
+        <table class="debuggable hide">
             <thead>
                 <tr>
                     <th class="grass" colspan="3">Grass</th>
@@ -57,7 +57,7 @@
                 </tr>
             </tbody>
         </table>
-        <table class="table">
+        <table class="table debuggable hide">
             <thead>
                 <tr>
                     <th colspan="3">Matrix Ground</th>
@@ -82,18 +82,23 @@
             </thead>
         </table>
 
-        <div id="actions">
+        <div id="actions-old">
             <button id="lightning">Lightning</button>
         </div>
         <div id="wrapper">
-            <div class="sidebar" id="left"></div>
+            <div class="sidebar" id="console"></div>
             <div id="canvas-wrapper"></div>
-            <div class="sidebar" id="right">
+            <div class="sidebar" id="actions">
                 <h3>Program status: <span id="program-status">RUN</span></h3>
-                <div>
+                <div class="center">
                     <button class="btn success" id="program-start" disabled>RUN</button>
                     <button class="btn warning" id="program-stop">STOP</button>
-                    <button class="btn danger" id="program-restart" disabled>RESTART</button>
+                    <button class="btn danger" id="program-restart">RESTART</button>
+                </div>
+                <h3>DebugMode: <span id="console-debug-status">Off</span></h3>
+                <div class="center">
+                    <button class="btn success" id="console-debug-on">ON</button>
+                    <button class="btn warning" id="console-debug-off" disabled>OFF</button>
                 </div>
             </div>
         </div>

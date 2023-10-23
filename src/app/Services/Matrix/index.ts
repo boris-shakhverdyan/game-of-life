@@ -9,6 +9,14 @@ import Cache from "../Cache/index.js";
 class Matrix {
     private static _matrix: TMatrix<number>;
 
+    public static isWithin(position: Position): boolean {
+        if (position.x >= 0 && position.x < Matrix.WIDTH && position.y >= 0 && position.y < Matrix.HEIGHT) {
+            return true;
+        }
+
+        return false;
+    }
+
     public static get(): TMatrix<number> {
         return this._matrix;
     }

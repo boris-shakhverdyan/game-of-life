@@ -1,6 +1,10 @@
 const socket = io();
 let initialized = false;
 
+const $ = (id) => document.getElementById(id);
+
+const consoleHTML = $("console");
+
 const handleError = () => {
     $("troubleshootingAlert").classList.remove("hide");
     initialized = false;
@@ -8,6 +12,7 @@ const handleError = () => {
 
 const handleSuccess = () => {
     $("troubleshootingAlert").classList.add("hide");
+    consoleHTML.innerHTML = "";
     console.clear();
 };
 
@@ -15,6 +20,34 @@ socket.on("connect", handleSuccess);
 socket.on("connect_error", handleError);
 socket.on("connect_failed", handleError);
 socket.on("disconnect", handleError);
+
+const consoleDebugStatus = $("console-debug-status");
+const consoleDebugOnBtn = $("console-debug-on");
+const consoleDebugOffBtn = $("console-debug-off");
+
+consoleDebugOnBtn.addEventListener("click", function () {
+    consoleDebugOnBtn.setAttribute("disabled", true);
+    consoleDebugOffBtn.removeAttribute("disabled");
+    consoleDebugStatus.innerText = "On";
+
+    for (let debuggable of document.getElementsByClassName("debuggable")) {
+        debuggable.classList.remove("hide");
+    }
+
+    socket.emit("debug-mode", true);
+});
+
+consoleDebugOffBtn.addEventListener("click", function () {
+    consoleDebugOffBtn.setAttribute("disabled", true);
+    consoleDebugOnBtn.removeAttribute("disabled");
+    consoleDebugStatus.innerText = "Off";
+
+    for (let debuggable of document.getElementsByClassName("debuggable")) {
+        debuggable.classList.add("hide");
+    }
+
+    socket.emit("debug-mode", false);
+});
 
 const MATRIX_WIDTH = 20;
 const MATRIX_HEIGHT = MATRIX_WIDTH;
@@ -44,8 +77,6 @@ const countOfIndex = (matrix, index, type = null) => {
     return result;
 };
 
-const $ = (id) => document.getElementById(id);
-
 const programStartBtn = $("program-start");
 const programStopBtn = $("program-stop");
 const programRestartBtn = $("program-restart");
@@ -62,6 +93,13 @@ programStartBtn.addEventListener("click", function () {
     programStopBtn.removeAttribute("disabled");
 
     socket.emit("program-status", "RUN");
+});
+
+programRestartBtn.addEventListener("click", function () {
+    programStartBtn.setAttribute("disabled", true);
+    programStopBtn.removeAttribute("disabled");
+
+    socket.emit("program-status", "RESTART");
 });
 
 const printCells = (matrix) => {
@@ -127,4 +165,12 @@ const printInfo = (matrix, counts) => {
             differenceCountPrint.classList.remove("danger");
         }
     }
+};
+
+const printToConsole = (node) => {
+    let p = document.createElement("p");
+    p.classList.add(node.type === "default" ? "row" : node.type);
+    p.innerText = node.text;
+
+    consoleHTML.prepend(p);
 };

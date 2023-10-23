@@ -15,22 +15,22 @@ class Predator extends Entity {
         { collection: Entities.rabbit, energy: 25 },
     ];
 
-    // public registerActions(): void {
-    //     super.registerActions();
+    public registerActions(): void {
+        super.registerActions();
 
-    //     // ATTACK
-    //     this.actions.register((entity) => {
-    //         if (this.hasFood(2) && entity.energy <= 70) {
-    //             this.attack();
-    //             return true;
-    //         }
+        // ATTACK
+        this.actions.register((entity) => {
+            if (this.hasFood(2) && entity.energy <= 70) {
+                this.attack();
+                return true;
+            }
 
-    //         return false;
-    //     });
-    // }
+            return false;
+        });
+    }
 
     public attack() {
-        this.eat(2);
+        this.eat(2, "attack");
     }
 }
 

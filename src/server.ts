@@ -12,10 +12,12 @@ import {
     PREDATOR_ID,
     RABBIT_ID,
 } from "./Constants/entities.js";
-import { DEFAULT_PROGRAM_STATUS, PORT } from "./Constants/app.js";
+import { DEBUG_MODE, DEFAULT_PROGRAM_STATUS, PORT } from "./Constants/app.js";
 import Program from "./app/Services/Program/index.js";
 import { TPROGRAM } from "./app/Services/Program/types.js";
 import { PROGRAM_RUN, PROGRAM_STOP } from "./app/Services/Program/constant.js";
+import Console from "./app/Services/Console/index.js";
+import { generateMatrix } from "./helpers.js";
 
 const app = express();
 const server = createServer(app);
@@ -26,14 +28,9 @@ app.use(express.static("public"));
 // program start
 
 Program.setStatus(DEFAULT_PROGRAM_STATUS);
+Console.changeDebugModeStatus(DEBUG_MODE);
 
-Matrix.generate(20, 20, [
-    { collection: Entities.grass, count: 25 },
-    { collection: Entities.grassEater, count: 2 },
-    { collection: Entities.predator, count: 2 },
-    // { collection: Entities.human, count: 1 },
-    { collection: Entities.rabbit, count: 10 },
-]);
+generateMatrix();
 
 const sendData = (socket: Socket<any>) => {
     const data = {
@@ -47,15 +44,20 @@ const sendData = (socket: Socket<any>) => {
             { index: HUMAN_ID, type: ANIMAL_INDEX, color: "purple" },
             { index: RABBIT_ID, type: ANIMAL_INDEX, color: "blue" },
         ],
+        options: {
+            debugMode: Console.debugMode,
+        },
     };
 
     socket.emit("draw", data);
+
+    Console.send(socket);
 };
 
 io.on("connection", (socket: any) => {
     sendData(socket);
 
-    socket.on("program-status", function (status: TPROGRAM) {
+    socket.on("program-status", function (status: TPROGRAM | "RESTART") {
         switch (status) {
             case PROGRAM_RUN:
                 Program.run();
@@ -63,9 +65,20 @@ io.on("connection", (socket: any) => {
             case PROGRAM_STOP:
                 Program.stop();
                 break;
+            case "RESTART":
+                Entities.reset();
+                generateMatrix();
+                Program.run();
+                break;
         }
 
+        Console.print(`Program: ${status}`, "danger");
+
         sendData(socket);
+    });
+
+    socket.on("debug-mode", function (value: boolean) {
+        Console.changeDebugModeStatus(value);
     });
 
     socket.on("game-event", function (args: any) {

@@ -3,16 +3,18 @@ import Position from "../Position/index.js";
 import Collection from "./index.js";
 
 class CreatureCollection<T extends Creature> extends Collection<T> {
+    public name: string;
     public index: number;
     public obj: any;
     public type: number;
 
-    constructor(index: number, obj: any, type: number) {
+    constructor(name: string, index: number, obj: any, type: number) {
         super([]);
 
         this.obj = obj;
         this.index = index;
         this.type = type;
+        this.name = name;
     }
 
     public add(position: Position) {

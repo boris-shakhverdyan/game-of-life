@@ -29,9 +29,13 @@ abstract class Creature {
         const myDirections = this.getCoordinates();
         const result: Position[] = [];
 
-        for (let pos of myDirections) {
-            if (!targetAround.filter((item) => item.isEqual(pos)).length) {
-                result.push(pos);
+        for (let position of myDirections) {
+            if (
+                Matrix.isWithin(position) &&
+                !targetAround.filter((targetPosition) => targetPosition.isEqual(position)).length &&
+                Matrix.isEmptyCell(position)
+            ) {
+                result.push(position);
             }
         }
 
@@ -42,20 +46,13 @@ abstract class Creature {
         const directions = this.getCoordinates(type, radius);
 
         for (let position of directions) {
-            if (
-                position.x >= 0 &&
-                position.x < Matrix.WIDTH &&
-                position.y >= 0 &&
-                position.y < Matrix.HEIGHT
-            ) {
-                if (Matrix.isEqual(position, index)) {
-                    if (
-                        this.position.isEqual(position, false) ||
-                        type === this.type ||
-                        Matrix.isEmptyCell(position, this.type)
-                    ) {
-                        return true;
-                    }
+            if (Matrix.isWithin(position) && Matrix.isEqual(position, index)) {
+                if (
+                    this.position.isEqual(position, false) ||
+                    type === this.type ||
+                    Matrix.isEmptyCell(position, this.type)
+                ) {
+                    return true;
                 }
             }
         }
@@ -72,20 +69,13 @@ abstract class Creature {
         const found: Position[] = [];
 
         for (let position of directions) {
-            if (
-                position.x >= 0 &&
-                position.x < Matrix.WIDTH &&
-                position.y >= 0 &&
-                position.y < Matrix.HEIGHT
-            ) {
-                if (Matrix.isEqual(position, index)) {
-                    if (
-                        this.position.isEqual(position, false) ||
-                        type === this.type ||
-                        Matrix.isEmptyCell(position, this.type)
-                    ) {
-                        found.push(position);
-                    }
+            if (Matrix.isWithin(position) && Matrix.isEqual(position, index)) {
+                if (
+                    this.position.isEqual(position, false) ||
+                    type === this.type ||
+                    Matrix.isEmptyCell(position, this.type)
+                ) {
+                    found.push(position);
                 }
             }
         }

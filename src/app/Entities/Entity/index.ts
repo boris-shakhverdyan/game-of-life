@@ -1,11 +1,11 @@
 import { EMPTYCELL_ID } from "../../../Constants/entities.js";
 import Age from "../../Services/Age/index.js";
-import CreatureCollection from "../../Services/Collection/CreatureCollection.js";
 import Matrix from "../../Services/Matrix/index.js";
 import Creature from "../Creature/index.js";
 import Actions from "../../Services/Actions/index.js";
 import Position from "../../Services/Position/index.js";
 import { EatableList } from "./types.js";
+import Console from "../../Services/Console/index.js";
 
 abstract class Entity extends Creature {
     public abstract age: Age;
@@ -63,23 +63,28 @@ abstract class Entity extends Creature {
             entity.energy -= 2;
             entity.lastChildMakePeriod++;
 
-            if (entity.age.isDead || entity.energy <= 0) {
+            if (entity.age.isDead || entity.energy <= 0 || Matrix.getByPos(this.position) !== this.index) {
                 entity.die();
             }
         });
     }
 
-    public move(newPos: Position = this.chooseRandomCell(EMPTYCELL_ID), energy: number = 3) {
+    public move(
+        newPos: Position = this.chooseRandomCell(EMPTYCELL_ID),
+        energy: number = 3,
+        action: string = "move"
+    ) {
         if (newPos) {
             Matrix.set(this.position, EMPTYCELL_ID);
             Matrix.set(newPos, this.index, this.type);
 
             this.position.set(newPos);
             this.energy -= energy;
+            Console.debug(`${this.collection.name}: ${action}`);
         }
     }
 
-    public eat(radius: number = this.radius) {
+    public eat(radius: number = this.radius, action: string = "eat") {
         for (let { collection, energy } of this.eatable) {
             const newPos = this.chooseRandomCell(collection.index, collection.type, radius);
 
@@ -92,6 +97,7 @@ abstract class Entity extends Creature {
 
                 this.position.set(newPos);
                 this.energy += energy;
+                Console.debug(`${this.collection.name}: ${action} to ${collection.name}`);
                 break;
             }
         }
@@ -111,6 +117,7 @@ abstract class Entity extends Creature {
             Matrix.set(newPos, this.index);
             this.energy = 15;
             this.lastChildMakePeriod = 0;
+            Console.debug(`${this.collection.name}: mul`);
         }
     }
 
@@ -118,6 +125,7 @@ abstract class Entity extends Creature {
         Matrix.setEmpty(this.position);
 
         this.collection.deleteByPos(this.position);
+        Console.debug(`${this.collection.name}: die`);
     }
 }
 

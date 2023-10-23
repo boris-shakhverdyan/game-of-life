@@ -16,15 +16,31 @@ lightningBtn.addEventListener("click", function () {
     action = "lightning";
 });
 
+socket.on("console", (list) => {
+    for (let message of list) {
+        printToConsole(message);
+    }
+});
+
 function setup() {
-    socket.on("draw", ({ matrix, counts, entities, program }) => {
-        if (!initialized && $("program-status").innerText !== program) {
-            if (program === "RUN") {
-                programStartBtn.click();
-            } else {
-                programStopBtn.click();
+    socket.on("draw", ({ matrix, counts, entities, program, options: { debugMode } }) => {
+        if (!initialized) {
+            if ($("program-status").innerText !== program) {
+                if (program === "RUN") {
+                    programStartBtn.click();
+                } else {
+                    programStopBtn.click();
+                }
             }
-            
+
+            if (consoleDebugStatus.innerText !== (debugMode ? "On" : "Off")) {
+                if (debugMode) {
+                    consoleDebugOnBtn.click();
+                } else {
+                    consoleDebugOffBtn.click();
+                }
+            }
+
             initialized = true;
         }
 
