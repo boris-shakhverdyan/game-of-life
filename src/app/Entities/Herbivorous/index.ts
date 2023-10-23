@@ -5,20 +5,20 @@ abstract class Herbivorous extends Entity {
     public registerActions(): void {
         super.registerActions();
 
-        // ESCAPE
-        this.actions.register((entity) => {
-            if (entity.energy >= 20 && entity.hasCell(PREDATOR_ID, ANIMAL_INDEX)) {
-                this.escape();
+        // ESCAPE FIXIT: is this entity escapes when it already eated?
+        // this.actions.register((entity) => {
+        //     if (entity.energy >= 20 && entity.hasCell(PREDATOR_ID, ANIMAL_INDEX)) {
+        //         this.escape();
 
-                return true;
-            }
+        //         return true;
+        //     }
 
-            return false;
-        });
+        //     return false;
+        // });
     }
 
     public escape() {
-        const predatorPos = this.chooseCell(PREDATOR_ID, ANIMAL_INDEX).random();
+        const predatorPos = this.chooseRandomCell(PREDATOR_ID, ANIMAL_INDEX);
 
         if (predatorPos) {
             const position = this.diffCoordinates(predatorPos).random();

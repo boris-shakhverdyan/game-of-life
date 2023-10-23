@@ -5,16 +5,21 @@ import Matrix from "../../Services/Matrix/index.js";
 import Creature from "../Creature/index.js";
 import Actions from "../../Services/Actions/index.js";
 import Position from "../../Services/Position/index.js";
+import { EatableList } from "./types.js";
 
 abstract class Entity extends Creature {
     public abstract age: Age;
     public lastChildMakePeriod: number = 0;
     public actions: Actions<this> = new Actions(this);
-    public abstract eatable: { collection: CreatureCollection<any>; energy: number }[];
+    public abstract eatable: EatableList;
+
+    constructor(position: Position) {
+        super(position);
+
+        this.registerActions();
+    }
 
     public do() {
-        this.registerActions();
-
         this.actions.run();
     }
 
@@ -26,7 +31,7 @@ abstract class Entity extends Creature {
                 entity.eatable.filter(({ collection }) => entity.hasCell(collection.index, collection.type))
                     .length
             ) {
-                entity.eatable.map((food) => entity.eat(food.collection, food.energy));
+                entity.eat();
 
                 return true;
             }
@@ -64,7 +69,7 @@ abstract class Entity extends Creature {
         });
     }
 
-    public move(newPos: Position = this.chooseCell(EMPTYCELL_ID).random(), energy: number = 3) {
+    public move(newPos: Position = this.chooseRandomCell(EMPTYCELL_ID), energy: number = 3) {
         if (newPos) {
             Matrix.set(this.position, EMPTYCELL_ID);
             Matrix.set(newPos, this.index, this.type);
@@ -74,23 +79,32 @@ abstract class Entity extends Creature {
         }
     }
 
-    public eat(entityCollection: CreatureCollection<any>, energy: number = 30, radius: number = this.radius) {
-        const newPos = this.chooseCell(entityCollection.index, entityCollection.type, radius).random();
+    public eat(radius: number = this.radius) {
+        for (let { collection, energy } of this.eatable) {
+            const newPos = this.chooseRandomCell(collection.index, collection.type, radius);
 
-        if (newPos) {
-            Matrix.set(this.position, EMPTYCELL_ID);
-            Matrix.set(newPos, EMPTYCELL_ID);
-            Matrix.set(newPos, this.index, this.type);
+            if (newPos) {
+                Matrix.set(this.position, EMPTYCELL_ID);
+                Matrix.set(newPos, EMPTYCELL_ID);
+                Matrix.set(newPos, this.index, this.type);
 
-            entityCollection.deleteByPos(newPos);
+                collection.deleteByPos(newPos);
 
-            this.position.set(newPos);
-            this.energy += energy;
+                this.position.set(newPos);
+                this.energy += energy;
+                break;
+            }
         }
     }
 
+    public hasFood(radius: number = this.radius): boolean {
+        return !!this.eatable.filter((food) =>
+            this.hasCell(food.collection.index, food.collection.type, radius)
+        ).length;
+    }
+
     public mul() {
-        const newPos = this.chooseCell(EMPTYCELL_ID).random();
+        const newPos = this.chooseRandomCell(EMPTYCELL_ID);
 
         if (newPos) {
             this.collection.add(newPos);

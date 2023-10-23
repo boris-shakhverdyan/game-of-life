@@ -28,8 +28,16 @@ class Entities {
             grassEater: this.grassEater.size,
             predator: this.predator.size,
             rabbit: this.rabbit.size,
-            // human: this.human.size,
+            human: 0,
         };
+    }
+
+    static run() {
+        this.grass.run((grass) => grass.mul());
+        this.grassEater.run((grassEater) => grassEater.do());
+        // this.human.run((human) => human.do());
+        this.rabbit.run((rabbit) => rabbit.do());
+        this.predator.run((predator) => predator.do());
     }
 }
 

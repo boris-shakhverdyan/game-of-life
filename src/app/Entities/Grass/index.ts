@@ -8,17 +8,20 @@ class Grass extends Creature {
     public index: number = GRASS_ID;
     public collection: CreatureCollection<Grass> = Entities.grass;
     public type: number = GROUND_INDEX;
+    public energy: number = 0;
 
     public mul() {
-        this.energy += 10;
-        const newPos = this.chooseCell(EMPTYCELL_ID).random();
+        this.energy += 25;
+        if (this.energy >= 100) {
+            const newPos = this.chooseCell(EMPTYCELL_ID).random();
 
-        if (newPos && this.energy >= 100) {
-            Entities.grass.add(newPos);
+            if (newPos) {
+                Entities.grass.add(newPos);
 
-            Matrix.set(newPos, this.index);
+                Matrix.set(newPos, this.index);
 
-            this.energy = 50;
+                this.energy = 0;
+            }
         }
     }
 }

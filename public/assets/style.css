@@ -1,0 +1,181 @@
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script&family=Roboto&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Roboto;
+}
+
+body {
+    background-color: #383842;
+}
+
+canvas {
+    border: 5px solid black;
+    border-radius: 5px;
+}
+
+#actions {
+    width: fit-content;
+    margin: auto;
+    background-color: black;
+    padding: 5px;
+}
+
+button {
+    padding: 5px 10px;
+    border: none;
+    background-color: #383842;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #464652;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table,
+tr,
+th,
+td {
+    border: 1px solid black;
+}
+
+td,
+th {
+    font-size: larger;
+    padding: 5px;
+    text-align: center;
+}
+
+.grass {
+    background-color: green;
+    color: white;
+}
+
+.grassEater {
+    background-color: yellow;
+    color: black;
+}
+
+.predator {
+    background-color: red;
+    color: black;
+}
+
+.human {
+    background-color: purple;
+    color: white;
+}
+
+.rabbit {
+    background-color: blue;
+    color: white;
+}
+
+.difference {
+    background-color: gainsboro;
+    color: black;
+}
+
+.danger {
+    background-color: darkred;
+    color: white;
+}
+
+#wrapper {
+    margin: 20px auto;
+    display: flex;
+    width: fit-content;
+    gap: 20px;
+}
+
+.sidebar {
+    width: 300px;
+    background-color: #454550;
+    padding: 10px;
+}
+
+.btn {
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn.danger {
+    background-color: crimson;
+    color: white;
+}
+
+.btn.danger:hover {
+    background-color: rgb(173, 21, 51);
+}
+
+.btn.success {
+    background-color: forestgreen;
+    color: white;
+}
+
+.btn.success:hover {
+    background-color: green;
+}
+
+.btn.warning {
+    background-color: orange;
+    color: black;
+}
+
+.btn.warning:hover {
+    background-color: rgb(209, 139, 8);
+    color: black;
+}
+
+.btn:disabled {
+    cursor: default;
+    background-color: #acacac;
+    color: black;
+    pointer-events: none;
+}
+
+h3 {
+    color: white;
+    text-align: center;
+    font-weight: normal;
+    margin-bottom: 10px;
+}
+
+.table {
+    background-color: #acacac;
+}
+
+#troubleshootingAlert {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+#troubleshootingAlert h3 {
+    display: block;
+    width: fit-content;
+    padding: 20px 40px;
+    background-color: crimson;
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#troubleshootingAlert.hide {
+    display: none;
+}

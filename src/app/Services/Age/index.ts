@@ -5,11 +5,11 @@ class Age {
     public ADULT: number;
     public TIMES_PER_YEAR: number;
 
-    constructor(max: number, old: number, adult: number, tymesPerYear: number = 40) {
+    constructor(max: number, old: number, adult: number, timesPerYear: number = 40) {
         this.MAX = max;
         this.OLD = old;
         this.ADULT = adult;
-        this.TIMES_PER_YEAR = tymesPerYear;
+        this.TIMES_PER_YEAR = timesPerYear;
     }
 
     get isAdult(): boolean {

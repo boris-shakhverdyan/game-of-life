@@ -92,6 +92,14 @@ abstract class Creature {
 
         return new Collection(found);
     }
+
+    protected chooseRandomCell(
+        index: number,
+        type: number = this.type,
+        radius: number = this.radius
+    ): Position {
+        return this.chooseCell(index, type, radius).random();
+    }
 }
 
 export default Creature;
