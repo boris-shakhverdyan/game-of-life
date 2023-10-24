@@ -23,7 +23,7 @@ export function generateMatrix() {
         { collection: Entities.grass, count: 25 },
         { collection: Entities.grassEater, count: 2 },
         { collection: Entities.predator, count: 2 },
-        // { collection: Entities.human, count: 1 },
+        { collection: Entities.human, count: 1 },
         { collection: Entities.rabbit, count: 10 },
     ]);
 }

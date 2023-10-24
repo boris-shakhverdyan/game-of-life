@@ -10,7 +10,7 @@
         <div id="troubleshootingAlert" class="hide">
             <h3>CONNECTION ERROR</h3>
         </div>
-        <table class="debuggable hide">
+        <table class="hide">
             <thead>
                 <tr>
                     <th class="grass" colspan="3">Grass</th>
@@ -57,7 +57,7 @@
                 </tr>
             </tbody>
         </table>
-        <table class="table debuggable hide">
+        <table class="table hide">
             <thead>
                 <tr>
                     <th colspan="3">Matrix Ground</th>
@@ -82,10 +82,11 @@
             </thead>
         </table>
 
-        <div id="actions-old">
+        <!-- <div id="actions-old">
             <button id="lightning">Lightning</button>
-        </div>
+        </div> -->
         <div id="wrapper">
+            <button id="console-clear">Clear</button>
             <div class="sidebar" id="console"></div>
             <div id="canvas-wrapper"></div>
             <div class="sidebar" id="actions">
@@ -95,10 +96,29 @@
                     <button class="btn warning" id="program-stop">STOP</button>
                     <button class="btn danger" id="program-restart">RESTART</button>
                 </div>
+                <hr />
                 <h3>DebugMode: <span id="console-debug-status">Off</span></h3>
                 <div class="center">
                     <button class="btn success" id="console-debug-on">ON</button>
                     <button class="btn warning" id="console-debug-off" disabled>OFF</button>
+                </div>
+                <hr />
+                <h3>Current Season: <span id="current-season">Summer</span></h3>
+                <div class="center list">
+                    <button class="btn success" id="season-auto" disabled>Auto</button>
+                    <button class="btn success" id="season-summer">Summer</button>
+                    <button class="btn success" id="season-summer">Autumn</button>
+                    <button class="btn success" id="season-summer">Winter</button>
+                    <button class="btn success" id="season-summer">Spring</button>
+                </div>
+                <hr />
+                <h3>Events</h3>
+                <div class="center list">
+                    <button class="btn success" id="lightning">Lightning</button>
+                    <button class="btn success" id="tsunami">Tsunami</button>
+                    <button class="btn success" id="follow-entity">Follow Animal</button>
+                    <button class="btn danger" id="worm">Worm</button>
+                    <button class="btn danger" id="giganotosaurus">Giganotosaurus</button>
                 </div>
             </div>
         </div>

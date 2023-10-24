@@ -49,6 +49,12 @@ consoleDebugOffBtn.addEventListener("click", function () {
     socket.emit("debug-mode", false);
 });
 
+const consoleClearBtn = $("console-clear");
+
+consoleClearBtn.addEventListener("click", function () {
+    consoleHTML.innerHTML = "";
+});
+
 const MATRIX_WIDTH = 20;
 const MATRIX_HEIGHT = MATRIX_WIDTH;
 const CELLS_COUNT = MATRIX_HEIGHT * MATRIX_WIDTH;

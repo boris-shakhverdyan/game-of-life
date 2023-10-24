@@ -95,6 +95,7 @@ th {
     display: flex;
     width: fit-content;
     gap: 20px;
+    position: relative;
 }
 
 .sidebar {
@@ -163,6 +164,7 @@ h3 {
     right: 0;
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.4);
+    z-index: 9999;
 }
 
 #troubleshootingAlert h3 {
@@ -228,4 +230,33 @@ h3 {
 
 .debuggable.hide {
     display: none;
+}
+
+#actions hr {
+    border: 0.5px solid rgb(46, 43, 56);
+    margin: 10px 0;
+}
+
+#console-clear {
+    padding: 5px 10px;
+    color: rgb(114, 92, 72);
+    border: 1px solid;
+    position: absolute;
+    top: 8px;
+    left: calc(500px - 60px);
+    background-color: transparent;
+    border-radius: 5px;
+}
+
+#console-clear:hover {
+    background-color: rgb(114, 92, 72);
+    color: black;
+    border: 1px solid rgb(114, 92, 72);
+}
+
+.center.list {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+    flex-wrap: wrap;
 }
