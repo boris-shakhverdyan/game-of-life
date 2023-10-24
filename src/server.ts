@@ -12,12 +12,14 @@ import {
     PREDATOR_ID,
     RABBIT_ID,
 } from "./Constants/entities.js";
-import { DEBUG_MODE, DEFAULT_PROGRAM_STATUS, PORT } from "./Constants/app.js";
+import { AUTO_SEASON, DEBUG_MODE, DEFAULT_PROGRAM_STATUS, PORT, START_SEASON } from "./Constants/app.js";
 import Program from "./app/Services/Program/index.js";
 import { TPROGRAM } from "./app/Services/Program/types.js";
 import { PROGRAM_RUN, PROGRAM_STOP } from "./app/Services/Program/constant.js";
 import Console from "./app/Services/Console/index.js";
 import { generateMatrix } from "./helpers.js";
+import Season from "./app/Services/Season/index.js";
+import { TSeasons } from "./app/Services/Season/types.js";
 
 const app = express();
 const server = createServer(app);
@@ -29,12 +31,13 @@ app.use(express.static("public"));
 
 Program.setStatus(DEFAULT_PROGRAM_STATUS);
 Console.changeDebugModeStatus(DEBUG_MODE);
+Season.set(START_SEASON);
+Season.setAutoChangeMode(AUTO_SEASON);
 
 generateMatrix();
 
 const sendData = (socket: Socket<any>) => {
     const data = {
-        program: Program.status,
         matrix: Matrix.get(),
         counts: Entities.counts(),
         entities: [
@@ -44,7 +47,12 @@ const sendData = (socket: Socket<any>) => {
             { index: HUMAN_ID, type: ANIMAL_INDEX, color: "purple" },
             { index: RABBIT_ID, type: ANIMAL_INDEX, color: "blue" },
         ],
+        season: {
+            current: Season.current,
+            auto: Season.autoChangeMode,
+        },
         options: {
+            program: Program.status,
             debugMode: Console.debugMode,
         },
     };
@@ -81,6 +89,17 @@ io.on("connection", (socket: any) => {
         Console.changeDebugModeStatus(value);
     });
 
+    socket.on("season", function (value: TSeasons | "Auto") {
+        if (value === "Auto") {
+            Season.autoChangeModeOn();
+        } else {
+            Season.set(value);
+            Season.autoChangeModeOff();
+        }
+
+        Console.print(`Season: ${value}`, "warning");
+    });
+
     socket.on("game-event", function (args: any) {
         console.log(args);
     });
@@ -88,6 +107,8 @@ io.on("connection", (socket: any) => {
     setInterval(() => {
         if (Program.status === PROGRAM_RUN) {
             Entities.run();
+
+            Season.next();
 
             sendData(socket);
         }
