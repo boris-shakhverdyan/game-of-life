@@ -1,52 +1,97 @@
 import express from "express";
 import { createServer } from "http";
-import { Server } from "socket.io";
+import { Server, Socket } from "socket.io";
 import Matrix from "./app/Services/Matrix/index.js";
-import Entities from "./app/Services/Entities/index.js";
-import Grass from "./app/Entities/Grass/index.js";
-import Position from "./app/Services/Position/index.js";
-import GrassEater from "./app/Entities/GrassEater/index.js";
-import Predator from "./app/Entities/Predator/index.js";
-import Human from "./app/Entities/Human/index.js";
-import Rabbit from "./app/Entities/Rabbit/index.js";
+import Entities from "./app/Modules/Entities/index.js";
 import {
-    GRASS_ID,
+    ANIMAL_INDEX,
     GRASSEATER_ID,
-    PREDATOR_ID,
+    GRASS_ID,
+    GROUND_INDEX,
     HUMAN_ID,
+    PREDATOR_ID,
     RABBIT_ID,
 } from "./Constants/entities.js";
+import { DEBUG_MODE, DEFAULT_PROGRAM_STATUS, PORT } from "./Constants/app.js";
+import Program from "./app/Services/Program/index.js";
+import { TPROGRAM } from "./app/Services/Program/types.js";
+import { PROGRAM_RUN, PROGRAM_STOP } from "./app/Services/Program/constant.js";
+import Console from "./app/Services/Console/index.js";
+import { generateMatrix } from "./helpers.js";
 
 const app = express();
 const server = createServer(app);
 const io = new Server(server);
-const PORT = 3000;
 
 app.use(express.static("public"));
 
 // program start
 
-Matrix.generate(20, 20, [
-    { index: GRASS_ID, count: 10, collection: Entities.grass },
-    { index: GRASSEATER_ID, count: 4, collection: Entities.grassEater },
-    { index: PREDATOR_ID, count: 2, collection: Entities.predator },
-    { index: HUMAN_ID, count: 1, collection: Entities.human },
-    { index: RABBIT_ID, count: 5, collection: Entities.rabbit },
-]);
+Program.setStatus(DEFAULT_PROGRAM_STATUS);
+Console.changeDebugModeStatus(DEBUG_MODE);
+
+generateMatrix();
+
+const sendData = (socket: Socket<any>) => {
+    const data = {
+        program: Program.status,
+        matrix: Matrix.get(),
+        counts: Entities.counts(),
+        entities: [
+            { index: GRASS_ID, type: GROUND_INDEX, color: "green" },
+            { index: GRASSEATER_ID, type: ANIMAL_INDEX, color: "yellow" },
+            { index: PREDATOR_ID, type: ANIMAL_INDEX, color: "red" },
+            { index: HUMAN_ID, type: ANIMAL_INDEX, color: "purple" },
+            { index: RABBIT_ID, type: ANIMAL_INDEX, color: "blue" },
+        ],
+        options: {
+            debugMode: Console.debugMode,
+        },
+    };
+
+    socket.emit("draw", data);
+
+    Console.send(socket);
+};
 
 io.on("connection", (socket: any) => {
-    setInterval(() => {
-        Entities.grass.run((grass) => grass.mul());
-        Entities.grassEater.run((grassEater) => grassEater.do());
-        Entities.predator.run((predator) => predator.do());
-        Entities.human.run((human) => human.do());
-        Entities.rabbit.run((rabbit) => rabbit.do());
+    sendData(socket);
 
-        socket.emit("draw", {
-            matrix: Matrix.get(),
-            counts: Entities.counts(),
-        });
-    }, 3000);
+    socket.on("program-status", function (status: TPROGRAM | "RESTART") {
+        switch (status) {
+            case PROGRAM_RUN:
+                Program.run();
+                break;
+            case PROGRAM_STOP:
+                Program.stop();
+                break;
+            case "RESTART":
+                Entities.reset();
+                generateMatrix();
+                Program.run();
+                break;
+        }
+
+        Console.print(`Program: ${status}`, "danger");
+
+        sendData(socket);
+    });
+
+    socket.on("debug-mode", function (value: boolean) {
+        Console.changeDebugModeStatus(value);
+    });
+
+    socket.on("game-event", function (args: any) {
+        console.log(args);
+    });
+
+    setInterval(() => {
+        if (Program.status === PROGRAM_RUN) {
+            Entities.run();
+
+            sendData(socket);
+        }
+    }, 1000);
 });
 
 // program end

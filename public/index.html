@@ -3,133 +3,128 @@
     <head>
         <title>Game of Life by Boris Shakhverdyan</title>
         <meta charset="UTF-8" />
+        <link rel="stylesheet" href="/assets/style.css" />
     </head>
 
     <body>
-        <style>
-            #legend {
-                /*position: relative;*/
-                top: 0;
-                right: 0;
-                width: 800px;
-            }
-
-            .legend-color {
-                width: 30px;
-                height: 30px;
-            }
-
-            td {
-                border: 1px solid black;
-                font-size: 14px;
-                padding-left: 5px;
-            }
-        </style>
-
-        <table id="DDD" class="table">
-            <tr>
-                <th bgcolor="green">Grass</th>
-                <th bgcolor="yellow">GrassEater</th>
-                <th bgcolor="red">Predator</th>
-                <th bgcolor="purple">Human</th>
-                <th bgcolor="blue">Rabbit</th>
-            </tr>
-            <tr>
-                <td id="Grass"></td>
-                <td id="GrassEater"></td>
-                <td id="Predator"></td>
-                <td id="Human"></td>
-                <td id="Rabbit"></td>
-            </tr>
+        <div id="troubleshootingAlert" class="hide">
+            <h3>CONNECTION ERROR</h3>
+        </div>
+        <table class="hide">
+            <thead>
+                <tr>
+                    <th class="grass" colspan="3">Grass</th>
+                    <th class="grassEater" colspan="3">GrassEater</th>
+                    <th class="predator" colspan="3">Predator</th>
+                    <th class="human" colspan="3">Human</th>
+                    <th class="rabbit" colspan="3">Rabbit</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="grass">Real count</td>
+                    <td class="grass">Matrix count</td>
+                    <td class="grass">Difference</td>
+                    <td class="grassEater">Real count</td>
+                    <td class="grassEater">Matrix count</td>
+                    <td class="grassEater">Difference</td>
+                    <td class="predator">Real count</td>
+                    <td class="predator">Matrix count</td>
+                    <td class="predator">Difference</td>
+                    <td class="human">Real count</td>
+                    <td class="human">Matrix count</td>
+                    <td class="human">Difference</td>
+                    <td class="rabbit">Real count</td>
+                    <td class="rabbit">Matrix count</td>
+                    <td class="rabbit">Difference</td>
+                </tr>
+                <tr>
+                    <td class="grass" id="countOfGrass">0</td>
+                    <td class="grass" id="matrixCountOfGrass">0</td>
+                    <td class="difference" id="differenceCountOfGrass">0</td>
+                    <td class="grassEater" id="countOfGrassEater">0</td>
+                    <td class="grassEater" id="matrixCountOfGrassEater">0</td>
+                    <td class="difference" id="differenceCountOfGrassEater">0</td>
+                    <td class="predator" id="countOfPredator">0</td>
+                    <td class="predator" id="matrixCountOfPredator">0</td>
+                    <td class="difference" id="differenceCountOfPredator">0</td>
+                    <td class="human" id="countOfHuman">0</td>
+                    <td class="human" id="matrixCountOfHuman">0</td>
+                    <td class="difference" id="differenceCountOfHuman">0</td>
+                    <td class="rabbit" id="countOfRabbit">0</td>
+                    <td class="rabbit" id="matrixCountOfRabbit">0</td>
+                    <td class="difference" id="differenceCountOfRabbit">0</td>
+                </tr>
+            </tbody>
         </table>
-        <table id="legend">
-            <tr>
-                <td class="legend-color">Գույն</td>
-                <td>Անվանում</td>
-                <td>Շարժվում է</td>
-                <td>Ուտում է</td>
-                <td>Բազմանում է</td>
-                <td>Սատկում է</td>
-            </tr>
-            <tr>
-                <td class="legend-color" style="background-color: green"></td>
-                <td>Խոտ</td>
-                <td></td>
-                <td></td>
-                <td>Մոտակա 8 վանդակներում, 4 տակտը մեկ</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="legend-color" style="background-color: yellow"></td>
-                <td>Խոտակեր</td>
-                <td>Մոտակա 8 վանդակներում, էներգիան քչանում է 1֊ով</td>
-                <td>
-                    Խոտերին, մոտակա 8 վանդակներում, շարժվելիս էներգիան ավելանում
-                    է 1֊ով
-                </td>
-                <td>
-                    Բազմանում է մոտակա տարածքներում, երբ էներգիան 10֊ից ավել է
-                </td>
-                <td>Սատկում է, երբ էներգիան փոքր է 0֊ից</td>
-            </tr>
-            <tr>
-                <td class="legend-color" style="background-color: red"></td>
-                <td>Գիշատիչ</td>
-                <td>Մոտակա 8 վանդակներում, էներգիան քչանում է 1֊ով</td>
-                <td>
-                    Խոտակերներին, մոտակա 8 վանդակներում, շարժվելիս էներգիան
-                    ավելանում է 2֊ով
-                </td>
-                <td>
-                    Բազմանում է մոտակա տարածքներում, երբ էներգիան 15֊ից ավել է
-                </td>
-                <td>Սատկում է, երբ էներգիան փոքր է 0֊ից</td>
-            </tr>
-            <tr>
-                <td class="legend-color" style="background-color: purple"></td>
-                <td>Մարդ</td>
-                <td>Մոտակա 8 վանդակներում, էներգիան քչանում է 2֊ով</td>
-                <td>
-                    <ul>
-                        <li>Խոտ</li>
-                        <li>էներգիա+=3</li>
-                    </ul>
-                    <ul>
-                        <li>խոտակեր</li>
-                        <li>էներգիա+=5</li>
-                    </ul>
-                    <ul>
-                        <li>Գիշատիչին</li>
-                        <li>էներգիա+=2</li>
-                    </ul>
-                    <ul>
-                        <li>նապաստակ</li>
-                        <li>էներգիա += 3</li>
-                    </ul>
-                </td>
-                <td>
-                    Բազմանում է մոտակա տարածքներում, երբ էներգիան 15֊ից ավել է
-                </td>
-                <td>Սատկում է, երբ էներգիան փոքր է 0֊ից</td>
-            </tr>
-            <tr>
-                <td class="legend-color" style="background-color: blue"></td>
-                <td>նապաստակ</td>
-                <td>Մոտակա 32 վանդակներում, էներգիան քչանում է 1֊ով</td>
-                <td>
-                    <ul>
-                        <li>Խոտ</li>
-                        <li>էներգիա+=3</li>
-                    </ul>
-                </td>
-                <td>
-                    Բազմանում է մոտակա տարածքներում, երբ էներգիան 15֊ից ավել է
-                </td>
-                <td>Սատկում է, երբ էներգիան փոքր է 0֊ից</td>
-            </tr>
+        <table class="table hide">
+            <thead>
+                <tr>
+                    <th colspan="3">Matrix Ground</th>
+                    <th colspan="3">Matrix Animal</th>
+                </tr>
+                <tr>
+                    <td>Empty cells count</td>
+                    <td>Busy cells count</td>
+                    <td>Difference</td>
+                    <td>Empty cells count</td>
+                    <td>Busy cells count</td>
+                    <td>Difference</td>
+                </tr>
+                <tr>
+                    <td id="groundEmpty">0</td>
+                    <td id="groundBusy">0</td>
+                    <td id="groundDifference">0</td>
+                    <td id="animalEmpty">0</td>
+                    <td id="animalBusy">0</td>
+                    <td id="animalDifference">0</td>
+                </tr>
+            </thead>
         </table>
+
+        <!-- <div id="actions-old">
+            <button id="lightning">Lightning</button>
+        </div> -->
+        <div id="wrapper">
+            <button id="console-clear">Clear</button>
+            <div class="sidebar" id="console"></div>
+            <div id="canvas-wrapper"></div>
+            <div class="sidebar" id="actions">
+                <h3>Program status: <span id="program-status">RUN</span></h3>
+                <div class="center">
+                    <button class="btn success" id="program-start" disabled>RUN</button>
+                    <button class="btn warning" id="program-stop">STOP</button>
+                    <button class="btn danger" id="program-restart">RESTART</button>
+                </div>
+                <hr />
+                <h3>DebugMode: <span id="console-debug-status">Off</span></h3>
+                <div class="center">
+                    <button class="btn success" id="console-debug-on">ON</button>
+                    <button class="btn warning" id="console-debug-off" disabled>OFF</button>
+                </div>
+                <hr />
+                <h3>Current Season: <span id="current-season">Summer</span></h3>
+                <div class="center list">
+                    <button class="btn success" id="season-auto" disabled>Auto</button>
+                    <button class="btn success" id="season-summer">Summer</button>
+                    <button class="btn success" id="season-summer">Autumn</button>
+                    <button class="btn success" id="season-summer">Winter</button>
+                    <button class="btn success" id="season-summer">Spring</button>
+                </div>
+                <hr />
+                <h3>Events</h3>
+                <div class="center list">
+                    <button class="btn success" id="lightning">Lightning</button>
+                    <button class="btn success" id="tsunami">Tsunami</button>
+                    <button class="btn success" id="follow-entity">Follow Animal</button>
+                    <button class="btn danger" id="worm">Worm</button>
+                    <button class="btn danger" id="giganotosaurus">Giganotosaurus</button>
+                </div>
+            </div>
+        </div>
         <script src="/socket.io/socket.io.js"></script>
         <script src="/assets/packages/p5.js"></script>
-        <script src="/assets/script.js"></script>
+        <script src="/assets/scripts/helpers.js"></script>
+        <script src="/assets/scripts/index.js"></script>
     </body>
 </html>

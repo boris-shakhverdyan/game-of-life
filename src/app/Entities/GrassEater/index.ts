@@ -1,22 +1,16 @@
-import { GRASSEATER_ID, GRASS_ID } from "../../../Constants/entities.js";
+import { ANIMAL_INDEX, GRASSEATER_ID } from "../../../Constants/entities.js";
 import CreatureCollection from "../../Services/Collection/CreatureCollection.js";
-import Entities from "../../Services/Entities/index.js";
-import Entity from "../Entity/index.js";
+import Entities from "../../Modules/Entities/index.js";
+import Age from "../../Services/Age/index.js";
+import Herbivorous from "../Herbivorous/index.js";
+import { EatableList } from "../Entity/types.js";
 
-class GrassEater extends Entity {
+class GrassEater extends Herbivorous {
     public index: number = GRASSEATER_ID;
-    public MAX_AGE: number = 50;
-    public OLD_AGE: number = 35;
-    public ADULT_AGE: number = 10;
+    public age: Age = new Age(50, 35, 10, 1);
     public collection: CreatureCollection<GrassEater> = Entities.grassEater;
-
-    public do() {
-        super.do([{ collection: Entities.grass, energy: 30 }]);
-    }
-
-    public eat() {
-        super.eat(Entities.grass, 30);
-    }
+    public type: number = ANIMAL_INDEX;
+    public eatable: EatableList = [{ collection: Entities.grass, energy: 30 }];
 }
 
 export default GrassEater;

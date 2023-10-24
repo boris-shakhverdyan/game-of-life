@@ -1,3 +1,7 @@
+export const ANIMAL_INDEX: number = 0;
+export const GROUND_INDEX: number = 1;
+export const UNDERGROUND_INDEX: number = 1;
+
 export const EMPTYCELL_ID: number = 0;
 
 export const GRASS_ID: number = 1;

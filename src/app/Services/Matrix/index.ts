@@ -4,24 +4,41 @@ import Random from "../Random/index.js";
 import { TMatrix } from "./types.js";
 import { EMPTYCELL_ID } from "../../../Constants/entities.js";
 import CreatureCollection from "../Collection/CreatureCollection.js";
+import Cache from "../Cache/index.js";
 
 class Matrix {
     private static _matrix: TMatrix<number>;
+
+    public static isWithin(position: Position): boolean {
+        if (position.x >= 0 && position.x < Matrix.WIDTH && position.y >= 0 && position.y < Matrix.HEIGHT) {
+            return true;
+        }
+
+        return false;
+    }
 
     public static get(): TMatrix<number> {
         return this._matrix;
     }
 
-    public static getByPos(position: Position): number {
-        return this._matrix[position.y][position.x];
+    public static getByPos(position: Position, type: number = position.type): number {
+        return this._matrix[position.y][position.x][type];
     }
 
-    public static set(position: Position, value: number) {
-        this._matrix[position.y][position.x] = value;
+    public static set(position: Position, value: number, type: number = position.type) {
+        this._matrix[position.y][position.x][type] = value;
     }
 
-    public static isEqual(position: Position, value: number): boolean {
-        return this.getByPos(position) === value;
+    public static setEmpty(position: Position, type: number = position.type) {
+        this._matrix[position.y][position.x][type] = EMPTYCELL_ID;
+    }
+
+    public static isEqual(position: Position, value: number, type: number = position.type): boolean {
+        return this.getByPos(position, type) === value;
+    }
+
+    public static isEmptyCell(position: Position, type: number = position.type): boolean {
+        return this.getByPos(position, type) === EMPTYCELL_ID;
     }
 
     public static get HEIGHT() {
@@ -32,12 +49,15 @@ class Matrix {
         return this._matrix[0].length;
     }
 
+    public static get DEPTH() {
+        return this._matrix[0][0].length;
+    }
+
     public static generate(
         width: number,
         height: number,
         entitiesCount:
             | {
-                  index: number;
                   count: number;
                   collection: CreatureCollection<any>;
               }[]
@@ -49,7 +69,7 @@ class Matrix {
             this._matrix.push([]);
 
             for (let x = 0; x < width; x++) {
-                this._matrix[y][x] = EMPTYCELL_ID;
+                this._matrix[y][x] = [EMPTYCELL_ID, EMPTYCELL_ID, EMPTYCELL_ID];
             }
         }
 
@@ -60,29 +80,24 @@ class Matrix {
         return this;
     }
 
-    public static random(): Position {
-        return new Position(Random.number(0, this.WIDTH - 1), Random.number(0, this.HEIGHT - 1));
+    public static random(type: number): Position {
+        return new Position(Random.number(0, this.WIDTH - 1), Random.number(0, this.HEIGHT - 1), type);
     }
 
     public static fillByEntity({
-        index,
         count,
         collection,
     }: {
-        index: number;
         count: number;
         collection: CreatureCollection<any>;
     }) {
-        const cache: Position[] = [];
+        const cache = new Cache<Position>();
 
         const fill = () => {
-            const position = this.random();
+            const position = this.random(collection.type);
 
-            if (
-                !cache.filter((item) => item.isEqual(position))[0] &&
-                this.isEqual(position, EMPTYCELL_ID)
-            ) {
-                this.set(position, index);
+            if (!cache.has(position) && this.isEmptyCell(position)) {
+                this.set(position, collection.index);
                 collection.push(new collection.obj(position));
                 cache.push(position);
                 return;

@@ -1,83 +1,131 @@
 import { EMPTYCELL_ID } from "../../../Constants/entities.js";
-import CreatureCollection from "../../Services/Collection/CreatureCollection.js";
+import Age from "../../Services/Age/index.js";
 import Matrix from "../../Services/Matrix/index.js";
-import Position from "../../Services/Position/index.js";
 import Creature from "../Creature/index.js";
+import Actions from "../../Services/Actions/index.js";
+import Position from "../../Services/Position/index.js";
+import { EatableList } from "./types.js";
+import Console from "../../Services/Console/index.js";
 
 abstract class Entity extends Creature {
-    public energy: number;
-    public age: number = 0;
-    public abstract MAX_AGE: number;
-    public abstract OLD_AGE: number;
-    public abstract ADULT_AGE: number;
-    public abstract collection: CreatureCollection<any>;
+    public abstract age: Age;
+    public lastChildMakePeriod: number = 0;
+    public actions: Actions<this> = new Actions(this);
+    public abstract eatable: EatableList;
 
     constructor(position: Position) {
         super(position);
-        this.energy = 50;
+
+        this.registerActions();
     }
 
-    public get isAdult(): boolean {
-        return this.age >= this.ADULT_AGE && this.age <= this.OLD_AGE;
+    public do() {
+        this.actions.run();
     }
 
-    public do(eatable: { collection: CreatureCollection<any>; energy: number }[]) {
-        if (this.energy <= 80 && this.hasCell(eatable.map((food) => food.collection.index))) {
-            eatable.map((food) => this.eat(food.collection, food.energy));
-        } else if (this.isAdult && this.energy >= 80) {
-            this.mul();
-        } else {
-            this.move();
-        }
+    public registerActions() {
+        // EAT
+        this.actions.register((entity) => {
+            if (
+                entity.energy <= 80 &&
+                entity.eatable.filter(({ collection }) => entity.hasCell(collection.index, collection.type))
+                    .length
+            ) {
+                entity.eat();
 
-        this.age += 1 / 40;
-        this.energy -= 2;
+                return true;
+            }
 
-        if (this.age >= this.MAX_AGE || this.energy < 0) {
-            return this.die();
-        }
+            return false;
+        });
+
+        // MUL
+        this.actions.register((entity) => {
+            if (entity.age.isAdult && entity.energy >= 80 && entity.lastChildMakePeriod >= 10) {
+                entity.mul();
+
+                return true;
+            }
+
+            return false;
+        });
+
+        // MOVE
+        this.actions.lastOfAll((entity) => {
+            entity.move();
+
+            return true;
+        });
+
+        // DIE
+        this.actions.finally((entity) => {
+            entity.age.increase();
+            entity.energy -= 2;
+            entity.lastChildMakePeriod++;
+
+            if (entity.age.isDead || entity.energy <= 0 || Matrix.getByPos(this.position) !== this.index) {
+                entity.die();
+            }
+        });
     }
 
-    public move() {
-        const newPos = this.chooseCell(EMPTYCELL_ID).random();
-
+    public move(
+        newPos: Position = this.chooseRandomCell(EMPTYCELL_ID),
+        energy: number = 3,
+        action: string = "move"
+    ) {
         if (newPos) {
             Matrix.set(this.position, EMPTYCELL_ID);
-            Matrix.set(newPos, this.index);
+            Matrix.set(newPos, this.index, this.type);
 
-            this.position = newPos;
-            this.energy -= 3;
+            this.position.set(newPos);
+            this.energy -= energy;
+            Console.debug(`${this.collection.name}: ${action}`);
         }
     }
 
-    public eat(entityCollection: CreatureCollection<any>, energy: number = 30) {
-        const newPos = this.chooseCell(entityCollection.index).random();
+    public eat(radius: number = this.radius, action: string = "eat") {
+        for (let { collection, energy } of this.eatable) {
+            const newPos = this.chooseRandomCell(collection.index, collection.type, radius);
 
-        if (newPos) {
-            Matrix.set(this.position, EMPTYCELL_ID);
-            Matrix.set(newPos, this.index);
+            if (newPos) {
+                Matrix.set(this.position, EMPTYCELL_ID);
+                Matrix.set(newPos, EMPTYCELL_ID);
+                Matrix.set(newPos, this.index, this.type);
 
-            entityCollection.deleteByPos(newPos);
+                collection.deleteByPos(newPos);
 
-            this.position = newPos;
-            this.energy += energy;
+                this.position.set(newPos);
+                this.energy += energy;
+                Console.debug(`${this.collection.name}: ${action} to ${collection.name}`);
+                break;
+            }
         }
+    }
+
+    public hasFood(radius: number = this.radius): boolean {
+        return !!this.eatable.filter((food) =>
+            this.hasCell(food.collection.index, food.collection.type, radius)
+        ).length;
     }
 
     public mul() {
-        const newPos = this.chooseCell(EMPTYCELL_ID).random();
+        const newPos = this.chooseRandomCell(EMPTYCELL_ID);
 
         if (newPos) {
             this.collection.add(newPos);
             Matrix.set(newPos, this.index);
             this.energy = 15;
+            this.lastChildMakePeriod = 0;
+            Console.debug(`${this.collection.name}: mul`);
         }
     }
 
     public die() {
-        Matrix.set(this.position, EMPTYCELL_ID);
+        Matrix.setEmpty(this.position);
 
         this.collection.deleteByPos(this.position);
+        Console.debug(`${this.collection.name}: die`);
     }
 }
 

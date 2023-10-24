@@ -31,10 +31,8 @@ class Random {
      *
      * @returns Random element from matrix.
      */
-    static matrixItem<T>(matrix: TMatrix<T>): T {
-        return matrix[Random.number(0, matrix.length - 1)][
-            Random.number(0, matrix[0].length - 1)
-        ];
+    static matrixItem<T>(matrix: TMatrix<T>, type: number): T {
+        return matrix[Random.number(0, matrix.length - 1)][Random.number(0, matrix[0].length - 1)][type];
     }
 }
 
