@@ -92,7 +92,7 @@ function setup() {
                     entities.map((entity) => {
                         if (matrix[y][x][entity.type] === entity.index) {
                             strokeWeight(entity.type === 0 ? 1 : 0);
-                            fill(entity.color);
+                            fill(entity.color[$("current-season").innerText.toLowerCase()] ?? entity.color.default);
 
                             switch (entity.type) {
                                 case 0:

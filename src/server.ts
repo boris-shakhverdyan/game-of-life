@@ -41,11 +41,11 @@ const sendData = (socket: Socket<any>) => {
         matrix: Matrix.get(),
         counts: Entities.counts(),
         entities: [
-            { index: GRASS_ID, type: GROUND_INDEX, color: "green" },
-            { index: GRASSEATER_ID, type: ANIMAL_INDEX, color: "yellow" },
-            { index: PREDATOR_ID, type: ANIMAL_INDEX, color: "red" },
-            { index: HUMAN_ID, type: ANIMAL_INDEX, color: "purple" },
-            { index: RABBIT_ID, type: ANIMAL_INDEX, color: "blue" },
+            { index: GRASS_ID, type: GROUND_INDEX, color: { default: "green", winter: "white" } },
+            { index: GRASSEATER_ID, type: ANIMAL_INDEX, color: { default: "yellow" } },
+            { index: PREDATOR_ID, type: ANIMAL_INDEX, color: { default: "red" } },
+            { index: HUMAN_ID, type: ANIMAL_INDEX, color: { default: "purple" } },
+            { index: RABBIT_ID, type: ANIMAL_INDEX, color: { default: "blue" } },
         ],
         season: {
             current: Season.current,

@@ -14,23 +14,14 @@ import Predator from "../../Entities/Predator/index.js";
 import CreatureCollection from "../../Services/Collection/CreatureCollection.js";
 import Console from "../../Services/Console/index.js";
 import Human from "../../Entities/Human/index.js";
+import EntityCollection from "../../Services/Collection/EntityCollection.js";
 
 class Entities {
     public static grass = new CreatureCollection<Grass>("Grass", GRASS_ID, Grass, GROUND_INDEX);
-    public static grassEater = new CreatureCollection<GrassEater>(
-        "GrassEater",
-        GRASSEATER_ID,
-        GrassEater,
-        ANIMAL_INDEX
-    );
-    public static predator = new CreatureCollection<Predator>(
-        "Predator",
-        PREDATOR_ID,
-        Predator,
-        ANIMAL_INDEX
-    );
-    public static rabbit = new CreatureCollection<Rabbit>("Rabbit", RABBIT_ID, Rabbit, ANIMAL_INDEX);
-    public static human = new CreatureCollection<Human>("Human", HUMAN_ID, Human, ANIMAL_INDEX);
+    public static grassEater = new EntityCollection("GrassEater", GRASSEATER_ID, GrassEater, ANIMAL_INDEX);
+    public static predator = new EntityCollection("Predator", PREDATOR_ID, Predator, ANIMAL_INDEX);
+    public static rabbit = new EntityCollection("Rabbit", RABBIT_ID, Rabbit, ANIMAL_INDEX);
+    public static human = new EntityCollection("Human", HUMAN_ID, Human, ANIMAL_INDEX);
 
     static counts() {
         return {
@@ -53,15 +44,10 @@ class Entities {
 
     static reset() {
         this.grass = new CreatureCollection<Grass>("Grass", GRASS_ID, Grass, GROUND_INDEX);
-        this.grassEater = new CreatureCollection<GrassEater>(
-            "GrassEater",
-            GRASSEATER_ID,
-            GrassEater,
-            ANIMAL_INDEX
-        );
-        this.predator = new CreatureCollection<Predator>("Predator", PREDATOR_ID, Predator, ANIMAL_INDEX);
-        this.rabbit = new CreatureCollection<Rabbit>("Rabbit", RABBIT_ID, Rabbit, ANIMAL_INDEX);
-        this.human = new CreatureCollection<Human>("Human", HUMAN_ID, Human, ANIMAL_INDEX);
+        this.grassEater = new EntityCollection("GrassEater", GRASSEATER_ID, GrassEater, ANIMAL_INDEX);
+        this.predator = new EntityCollection("Predator", PREDATOR_ID, Predator, ANIMAL_INDEX);
+        this.rabbit = new EntityCollection("Rabbit", RABBIT_ID, Rabbit, ANIMAL_INDEX);
+        this.human = new EntityCollection("Human", HUMAN_ID, Human, ANIMAL_INDEX);
     }
 }
 

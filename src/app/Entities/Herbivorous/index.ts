@@ -1,5 +1,4 @@
 import { ANIMAL_INDEX, PREDATOR_ID } from "../../../Constants/entities.js";
-import Console from "../../Services/Console/index.js";
 import Matrix from "../../Services/Matrix/index.js";
 import Entity from "../Entity/index.js";
 

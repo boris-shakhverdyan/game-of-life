@@ -6,12 +6,17 @@ import Actions from "../../Services/Actions/index.js";
 import Position from "../../Services/Position/index.js";
 import { EatableList } from "./types.js";
 import Console from "../../Services/Console/index.js";
+import { FEMALE, TGender } from "../../Services/Gender/types.js";
+import Gender from "../../Services/Gender/index.js";
+import EntityCollection from "../../Services/Collection/EntityCollection.js";
 
 abstract class Entity extends Creature {
     public abstract age: Age;
     public lastChildMakePeriod: number = 0;
+    public gender: TGender = Gender.random();
     public actions: Actions<this> = new Actions(this);
     public abstract eatable: EatableList;
+    public abstract collection: EntityCollection;
 
     constructor(position: Position) {
         super(position);
@@ -26,11 +31,7 @@ abstract class Entity extends Creature {
     public registerActions() {
         // EAT
         this.actions.register((entity) => {
-            if (
-                entity.energy <= 80 &&
-                entity.eatable.filter(({ collection }) => entity.hasCell(collection.index, collection.type))
-                    .length
-            ) {
+            if (entity.energy <= 80 && entity.hasFood()) {
                 entity.eat();
 
                 return true;
@@ -41,7 +42,7 @@ abstract class Entity extends Creature {
 
         // MUL
         this.actions.register((entity) => {
-            if (entity.age.isAdult && entity.energy >= 80 && entity.lastChildMakePeriod >= 10) {
+            if (entity.canItMultiply()) {
                 entity.mul();
 
                 return true;
@@ -67,6 +68,25 @@ abstract class Entity extends Creature {
                 entity.die();
             }
         });
+    }
+
+    protected canItMultiply(): boolean {
+        let malePosList = this.chooseCell(this.index, this.type, 1);
+        let isMaleAround: boolean = false;
+
+        for (let malePos of malePosList) {
+            if (this.collection.isMale(malePos)) {
+                isMaleAround = true;
+            }
+        }
+
+        return (
+            this.gender === FEMALE &&
+            this.age.isAdult &&
+            this.energy >= 80 &&
+            this.lastChildMakePeriod >= 10 &&
+            isMaleAround
+        );
     }
 
     public move(

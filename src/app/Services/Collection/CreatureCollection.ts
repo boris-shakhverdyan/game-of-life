@@ -32,6 +32,10 @@ class CreatureCollection<T extends Creature> extends Collection<T> {
     public run(callbackfn: (value: T, index: number, array: T[]) => void) {
         this._arr.map(callbackfn);
     }
+
+    public getByPos(position: Position): T | undefined {
+        return this._arr.find((item) => item.position.isEqual(position));
+    }
 }
 
 export default CreatureCollection;

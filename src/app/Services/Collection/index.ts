@@ -22,6 +22,12 @@ class Collection<T> {
     public random(): T {
         return Random.arrayItem(this._arr);
     }
+
+    public *[Symbol.iterator]() {
+        for (let item of this._arr) {
+            yield item;
+        }
+    }
 }
 
 export default Collection;

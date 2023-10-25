@@ -2,13 +2,13 @@ import { ANIMAL_INDEX, PREDATOR_ID } from "../../../Constants/entities.js";
 import Entities from "../../Modules/Entities/index.js";
 import Entity from "../Entity/index.js";
 import Age from "../../Services/Age/index.js";
-import CreatureCollection from "../../Services/Collection/CreatureCollection.js";
 import { EatableList } from "../Entity/types.js";
+import EntityCollection from "../../Services/Collection/EntityCollection.js";
 
 class Predator extends Entity {
     public index: number = PREDATOR_ID;
-    public age: Age = new Age(30, 25, 5);
-    public collection: CreatureCollection<Predator> = Entities.predator;
+    public age: Age = new Age(4, 3, 1);
+    public collection: EntityCollection = Entities.predator;
     public type: number = ANIMAL_INDEX;
     public eatable: EatableList = [
         { collection: Entities.grassEater, energy: 70 },
