@@ -2,7 +2,7 @@ const wrapper = $("wrapper");
 const programStatusHTML = $("program-status");
 
 const SIDE = 20;
-const BACKGROUND_COLOR = "#acacac";
+const BACKGROUND_COLOR = "#5d3d25";
 const SIDE_E = SIDE * 0.75;
 let canvas = null;
 let isCanvasEventSetups = false;
@@ -92,7 +92,10 @@ function setup() {
                     entities.map((entity) => {
                         if (matrix[y][x][entity.type] === entity.index) {
                             strokeWeight(entity.type === 0 ? 1 : 0);
-                            fill(entity.color[$("current-season").innerText.toLowerCase()] ?? entity.color.default);
+                            fill(
+                                entity.color[$("current-season").innerText.toLowerCase()] ??
+                                    entity.color.default
+                            );
 
                             switch (entity.type) {
                                 case 0:

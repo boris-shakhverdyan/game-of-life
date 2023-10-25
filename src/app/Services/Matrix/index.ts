@@ -33,8 +33,14 @@ class Matrix {
         this._matrix[position.y][position.x][type] = EMPTYCELL_ID;
     }
 
-    public static isEqual(position: Position, value: number, type: number = position.type): boolean {
-        return this.getByPos(position, type) === value;
+    public static isEqual(
+        position: Position,
+        value: number | number[],
+        type: number = position.type
+    ): boolean {
+        return Array.isArray(value)
+            ? value.includes(this.getByPos(position, type))
+            : this.getByPos(position, type) === value;
     }
 
     public static isEmptyCell(position: Position, type: number = position.type): boolean {
@@ -97,7 +103,7 @@ class Matrix {
             const position = this.random(collection.type);
 
             if (!cache.has(position) && this.isEmptyCell(position)) {
-                this.set(position, collection.index);
+                this.set(position, Array.isArray(collection.index) ? collection.index[0] : collection.index);
                 collection.push(new collection.obj(position));
                 cache.push(position);
                 return;

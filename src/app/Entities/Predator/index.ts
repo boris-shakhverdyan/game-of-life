@@ -19,19 +19,10 @@ class Predator extends Entity {
         super.registerActions();
 
         // ATTACK
-        this.actions.register((entity) => {
-            if (this.hasFood(2) && entity.energy <= 70) {
-                this.attack();
-                return true;
-            }
-
-            return false;
-        });
+        this.actions.when(() => this.isHungry && this.hasFoodInRadius(2)).do(this.attack);
     }
 
-    public attack() {
-        this.eat(2, "attack");
-    }
+    public attack = () => this.eat(2, "attack");
 }
 
 export default Predator;

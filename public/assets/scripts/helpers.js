@@ -66,14 +66,14 @@ const countOfIndex = (matrix, index, type = null) => {
         for (let x = 0; x < matrix[y].length; x++) {
             if (type === null) {
                 for (let z = 0; z < matrix[y][x].length; z++) {
-                    if (matrix[y][x][z] == index) {
+                    if (Array.isArray(index) ? index.includes(matrix[y][x][z]) : matrix[y][x][z] == index) {
                         result++;
-                    } else if (type) {
-                        matrix[y][x][z] == index;
                     }
                 }
             } else {
-                if (matrix[y][x][type] === index) {
+                if (
+                    Array.isArray(index) ? index.includes(matrix[y][x][type]) : matrix[y][x][type] === index
+                ) {
                     result++;
                 }
             }
@@ -104,6 +104,7 @@ programStartBtn.addEventListener("click", function () {
 programRestartBtn.addEventListener("click", function () {
     programStartBtn.setAttribute("disabled", true);
     programStopBtn.removeAttribute("disabled");
+    initialized = false;
 
     socket.emit("program-status", "RESTART");
 });
@@ -141,7 +142,7 @@ const printCells = (matrix) => {
 };
 
 const entities = [
-    { index: 1, name: "grass", title: "Grass" },
+    { index: 1, name: "grass", title: "Grass", sum: 6 },
     { index: 2, name: "grassEater", title: "GrassEater" },
     { index: 3, name: "predator", title: "Predator" },
     { index: 4, name: "human", title: "Human" },
@@ -155,7 +156,7 @@ const printInfo = (matrix, counts) => {
         let differenceCountPrint = $("differenceCountOf" + entity.title);
 
         let realCount = counts[entity.name];
-        let matrixCount = countOfIndex(matrix, entity.index);
+        let matrixCount = countOfIndex(matrix, entity.sum ? [entity.sum, entity.index] : entity.index);
         let diffCount = realCount - matrixCount;
 
         countPrint.innerText = realCount;

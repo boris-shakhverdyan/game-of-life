@@ -1,8 +1,9 @@
+import { AUTUMN, SPRING, SUMMER, WINTER } from "./constants.js";
 import { TSeasons } from "./types.js";
 
 class Season {
     private static _current: number = 0;
-    private static _list: TSeasons[] = ["Summer", "Autumn", "Winter", "Spring"];
+    private static _list: TSeasons[] = [SUMMER, AUTUMN, WINTER, SPRING];
     private static _changeRate: number = 20;
     private static _currentRate: number = 0;
     private static _autoChangeMode: boolean = true;

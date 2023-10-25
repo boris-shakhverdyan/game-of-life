@@ -11,6 +11,7 @@ import {
     HUMAN_ID,
     PREDATOR_ID,
     RABBIT_ID,
+    THCIKGRASS_ID,
 } from "./Constants/entities.js";
 import { AUTO_SEASON, DEBUG_MODE, DEFAULT_PROGRAM_STATUS, PORT, START_SEASON } from "./Constants/app.js";
 import Program from "./app/Services/Program/index.js";
@@ -29,19 +30,29 @@ app.use(express.static("public"));
 
 // program start
 
-Program.setStatus(DEFAULT_PROGRAM_STATUS);
-Console.changeDebugModeStatus(DEBUG_MODE);
-Season.set(START_SEASON);
-Season.setAutoChangeMode(AUTO_SEASON);
+const initGame = () => {
+    Entities.reset();
+    Program.setStatus(DEFAULT_PROGRAM_STATUS);
+    Console.changeDebugModeStatus(DEBUG_MODE);
+    Season.set(START_SEASON);
+    Season.setAutoChangeMode(AUTO_SEASON);
 
-generateMatrix();
+    generateMatrix();
+};
+
+initGame();
 
 const sendData = (socket: Socket<any>) => {
     const data = {
         matrix: Matrix.get(),
         counts: Entities.counts(),
         entities: [
-            { index: GRASS_ID, type: GROUND_INDEX, color: { default: "green", winter: "white" } },
+            { index: GRASS_ID, type: GROUND_INDEX, color: { default: "forestgreen", winter: "white" } },
+            {
+                index: THCIKGRASS_ID,
+                type: GROUND_INDEX,
+                color: { default: "green", winter: "rgb(178, 194, 211)" },
+            },
             { index: GRASSEATER_ID, type: ANIMAL_INDEX, color: { default: "yellow" } },
             { index: PREDATOR_ID, type: ANIMAL_INDEX, color: { default: "red" } },
             { index: HUMAN_ID, type: ANIMAL_INDEX, color: { default: "purple" } },
@@ -74,9 +85,7 @@ io.on("connection", (socket: any) => {
                 Program.stop();
                 break;
             case "RESTART":
-                Entities.reset();
-                generateMatrix();
-                Program.run();
+                initGame();
                 break;
         }
 
