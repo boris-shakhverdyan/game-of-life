@@ -143,8 +143,8 @@ const printCells = (matrix) => {
 
 const entities = [
     { index: 1, name: "grass", title: "Grass", sum: 6 },
-    { index: 2, name: "grassEater", title: "GrassEater" },
-    { index: 3, name: "predator", title: "Predator" },
+    { index: 2, name: "sheep", title: "Sheep" },
+    { index: 3, name: "wolf", title: "Wolf" },
     { index: 4, name: "human", title: "Human" },
     { index: 5, name: "rabbit", title: "Rabbit" },
 ];

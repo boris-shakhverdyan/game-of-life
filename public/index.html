@@ -14,8 +14,8 @@
             <thead>
                 <tr>
                     <th class="grass" colspan="3">Grass</th>
-                    <th class="grassEater" colspan="3">GrassEater</th>
-                    <th class="predator" colspan="3">Predator</th>
+                    <th class="sheep" colspan="3">Sheep</th>
+                    <th class="wolf" colspan="3">Wolf</th>
                     <th class="human" colspan="3">Human</th>
                     <th class="rabbit" colspan="3">Rabbit</th>
                 </tr>
@@ -25,12 +25,12 @@
                     <td class="grass">Real count</td>
                     <td class="grass">Matrix count</td>
                     <td class="grass">Difference</td>
-                    <td class="grassEater">Real count</td>
-                    <td class="grassEater">Matrix count</td>
-                    <td class="grassEater">Difference</td>
-                    <td class="predator">Real count</td>
-                    <td class="predator">Matrix count</td>
-                    <td class="predator">Difference</td>
+                    <td class="sheep">Real count</td>
+                    <td class="sheep">Matrix count</td>
+                    <td class="sheep">Difference</td>
+                    <td class="wolf">Real count</td>
+                    <td class="wolf">Matrix count</td>
+                    <td class="wolf">Difference</td>
                     <td class="human">Real count</td>
                     <td class="human">Matrix count</td>
                     <td class="human">Difference</td>
@@ -42,12 +42,12 @@
                     <td class="grass" id="countOfGrass">0</td>
                     <td class="grass" id="matrixCountOfGrass">0</td>
                     <td class="difference" id="differenceCountOfGrass">0</td>
-                    <td class="grassEater" id="countOfGrassEater">0</td>
-                    <td class="grassEater" id="matrixCountOfGrassEater">0</td>
-                    <td class="difference" id="differenceCountOfGrassEater">0</td>
-                    <td class="predator" id="countOfPredator">0</td>
-                    <td class="predator" id="matrixCountOfPredator">0</td>
-                    <td class="difference" id="differenceCountOfPredator">0</td>
+                    <td class="sheep" id="countOfSheep">0</td>
+                    <td class="sheep" id="matrixCountOfSheep">0</td>
+                    <td class="difference" id="differenceCountOfSheep">0</td>
+                    <td class="wolf" id="countOfWolf">0</td>
+                    <td class="wolf" id="matrixCountOfWolf">0</td>
+                    <td class="difference" id="differenceCountOfWolf">0</td>
                     <td class="human" id="countOfHuman">0</td>
                     <td class="human" id="matrixCountOfHuman">0</td>
                     <td class="difference" id="differenceCountOfHuman">0</td>
@@ -87,9 +87,10 @@
         </div> -->
         <div id="wrapper">
             <button id="console-clear" class="debuggable hide">Clear</button>
-            <div class="sidebar debuggable hide" id="console" ></div>
+            <div class="sidebar debuggable hide" id="console"></div>
             <div id="canvas-wrapper"></div>
             <div class="sidebar" id="actions">
+                <h3>Frames count: <span id="frames-count">0</span></h3>
                 <h3>Program status: <span id="program-status">RUN</span></h3>
                 <div class="center">
                     <button class="btn success" id="program-start" disabled>RUN</button>

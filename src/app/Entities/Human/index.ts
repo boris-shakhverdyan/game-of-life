@@ -12,8 +12,8 @@ class Human extends Entity {
     public type: number = ANIMAL_INDEX;
     public eatable: EatableList = [
         { collection: Entities.grass, energy: 10 },
-        { collection: Entities.grassEater, energy: 50 },
-        { collection: Entities.predator, energy: 10 },
+        { collection: Entities.sheep, energy: 50 },
+        { collection: Entities.wolf, energy: 10 },
         { collection: Entities.rabbit, energy: 20 },
     ];
 }

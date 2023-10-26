@@ -25,8 +25,15 @@ socket.on("console", (list) => {
 function setup() {
     socket.on(
         "draw",
-        ({ matrix, counts, entities, season: { current, auto }, options: { debugMode, program } }) => {
+        ({
+            matrix,
+            counts,
+            entities,
+            season: { current, auto },
+            options: { debugMode, program, framesCount },
+        }) => {
             $("current-season").innerText = current;
+            $("frames-count").innerText = framesCount;
 
             if (!initialized) {
                 if ($("program-status").innerText !== program) {

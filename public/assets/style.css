@@ -60,12 +60,12 @@ th {
     color: white;
 }
 
-.grassEater {
+.sheep {
     background-color: yellow;
     color: black;
 }
 
-.predator {
+.wolf {
     background-color: red;
     color: black;
 }
@@ -103,6 +103,7 @@ th {
     background-color: #454550;
     padding: 10px;
     height: 400px;
+    overflow-y: auto;
 }
 
 .btn {

@@ -5,12 +5,12 @@ import Matrix from "./app/Services/Matrix/index.js";
 import Entities from "./app/Modules/Entities/index.js";
 import {
     ANIMAL_INDEX,
-    GRASSEATER_ID,
     GRASS_ID,
     GROUND_INDEX,
     HUMAN_ID,
-    PREDATOR_ID,
+    WOLF_ID,
     RABBIT_ID,
+    SHEEP_ID,
     THCIKGRASS_ID,
 } from "./Constants/entities.js";
 import { AUTO_SEASON, DEBUG_MODE, DEFAULT_PROGRAM_STATUS, PORT, START_SEASON } from "./Constants/app.js";
@@ -21,6 +21,7 @@ import Console from "./app/Services/Console/index.js";
 import { generateMatrix } from "./helpers.js";
 import Season from "./app/Services/Season/index.js";
 import { TSeasons } from "./app/Services/Season/types.js";
+import Frame from "./app/Services/Frame/index.js";
 
 const app = express();
 const server = createServer(app);
@@ -32,11 +33,11 @@ app.use(express.static("public"));
 
 const initGame = () => {
     Entities.reset();
-    Program.setStatus(DEFAULT_PROGRAM_STATUS);
+    Program.reset();
     Console.changeDebugModeStatus(DEBUG_MODE);
     Season.set(START_SEASON);
     Season.setAutoChangeMode(AUTO_SEASON);
-
+    Frame.clear();
     generateMatrix();
 };
 
@@ -53,10 +54,10 @@ const sendData = (socket: Socket<any>) => {
                 type: GROUND_INDEX,
                 color: { default: "green", winter: "rgb(178, 194, 211)" },
             },
-            { index: GRASSEATER_ID, type: ANIMAL_INDEX, color: { default: "yellow" } },
-            { index: PREDATOR_ID, type: ANIMAL_INDEX, color: { default: "red" } },
+            { index: SHEEP_ID, type: ANIMAL_INDEX, color: { default: "yellow" } },
+            { index: WOLF_ID, type: ANIMAL_INDEX, color: { default: "red" } },
             { index: HUMAN_ID, type: ANIMAL_INDEX, color: { default: "purple" } },
-            { index: RABBIT_ID, type: ANIMAL_INDEX, color: { default: "blue" } },
+            { index: RABBIT_ID, type: ANIMAL_INDEX, color: { default: "royalblue" } },
         ],
         season: {
             current: Season.current,
@@ -64,6 +65,7 @@ const sendData = (socket: Socket<any>) => {
         },
         options: {
             program: Program.status,
+            framesCount: Program.frame,
             debugMode: Console.debugMode,
         },
     };
@@ -74,6 +76,7 @@ const sendData = (socket: Socket<any>) => {
 };
 
 io.on("connection", (socket: any) => {
+    Frame.clear();
     sendData(socket);
 
     socket.on("program-status", function (status: TPROGRAM | "RESTART") {
@@ -86,6 +89,7 @@ io.on("connection", (socket: any) => {
                 break;
             case "RESTART":
                 initGame();
+                Frame.run();
                 break;
         }
 
@@ -113,15 +117,20 @@ io.on("connection", (socket: any) => {
         console.log(args);
     });
 
-    setInterval(() => {
-        if (Program.status === PROGRAM_RUN) {
-            Entities.run();
+    Frame.set(() =>
+        setInterval(() => {
+            if (Program.status === PROGRAM_RUN) {
+                Program.frame++;
+                Entities.run();
 
-            Season.next();
+                Season.next();
 
-            sendData(socket);
-        }
-    }, 1000);
+                sendData(socket);
+            }
+        }, 1000)
+    );
+
+    Frame.run();
 });
 
 // program end
