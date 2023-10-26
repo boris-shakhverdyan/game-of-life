@@ -8,3 +8,4 @@ export const DEBUG_MODE = false;
 export const START_SEASON: TSeasons = "Summer";
 export const AUTO_SEASON: boolean = true;
 export const SEASON_CHANGE_RATE: number = 10;
+export const FRAME_DURATION = 1000;

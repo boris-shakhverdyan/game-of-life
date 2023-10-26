@@ -14,8 +14,10 @@ class Frame {
     }
 
     public static run() {
-        this.clear();
-        this._interval = this._intervalCallback ? this._intervalCallback() : null;
+        if (!this._interval && this._intervalCallback) {
+            this.clear();
+            this._interval = this._intervalCallback ? this._intervalCallback() : null;
+        }
     }
 }
 

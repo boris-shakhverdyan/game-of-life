@@ -167,7 +167,7 @@ const printInfo = (matrix, counts) => {
             differenceCountPrint.classList.add("danger");
             console.log("DANGER: ", entity, { realCount, matrixCount, diffCount });
 
-            programStopBtn.click();
+            // programStopBtn.click();
         } else {
             differenceCountPrint.classList.remove("danger");
         }

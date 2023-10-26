@@ -25,40 +25,29 @@ socket.on("console", (list) => {
 function setup() {
     socket.on(
         "draw",
-        ({
-            matrix,
-            counts,
-            entities,
-            season: { current, auto },
-            options: { debugMode, program, framesCount },
-        }) => {
-            $("current-season").innerText = current;
+        ({ matrix, counts, entities, season, options: { debugMode, program, framesCount } }) => {
+            $("current-season").innerText = season;
             $("frames-count").innerText = framesCount;
+            $("program-status").innerText = program;
+
+            if (program === "RUN") {
+                programStartBtn.click();
+            } else {
+                programStopBtn.click();
+            }
+
+            for (let s of seasons) {
+                if (s.innerText === season) {
+                    s.click();
+                }
+            }
 
             if (!initialized) {
-                if ($("program-status").innerText !== program) {
-                    if (program === "RUN") {
-                        programStartBtn.click();
-                    } else {
-                        programStopBtn.click();
-                    }
-                }
-
                 if (consoleDebugStatus.innerText !== (debugMode ? "On" : "Off")) {
                     if (debugMode) {
                         consoleDebugOnBtn.click();
                     } else {
                         consoleDebugOffBtn.click();
-                    }
-                }
-
-                if (auto) {
-                    $("season-auto").click();
-                } else {
-                    for (let s of seasons) {
-                        if (s.innerText === current) {
-                            s.click();
-                        }
                     }
                 }
 

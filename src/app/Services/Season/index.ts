@@ -1,3 +1,4 @@
+import { AUTO_SEASON, START_SEASON } from "../../../Constants/app.js";
 import { AUTUMN, SPRING, SUMMER, WINTER } from "./constants.js";
 import { TSeasons } from "./types.js";
 
@@ -24,6 +25,11 @@ class Season {
                 this.nextSeason();
             }
         }
+    }
+
+    public static reset() {
+        Season.set(START_SEASON);
+        Season.setAutoChangeMode(AUTO_SEASON);
     }
 
     private static nextSeason() {

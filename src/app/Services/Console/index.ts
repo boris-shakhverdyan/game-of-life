@@ -37,15 +37,21 @@ class Console {
     }
 
     public static send(socket: Socket) {
-        if (this._debugMode && this._debugList.length) {
-            socket.emit("console", this._debugList);
-            this._debugList = [];
+        if (socket.data.debugMode) {
+            let debugList = this._debugList.filter((item) => socket.data.consoleList.indexOf(item) === -1);
+
+            if (debugList.length) {
+                socket.data.consoleList = socket.data.consoleList.concat(debugList);
+            }
         }
 
-        if (this._list.length) {
-            socket.emit("console", this._list);
-            this._list = [];
+        let newList = this._list.filter((item) => socket.data.consoleList.indexOf(item) === -1);
+
+        if (newList.length) {
+            socket.data.consoleList = socket.data.consoleList.concat(newList);
         }
+
+        socket.emit("console", socket.data.consoleList);
     }
 }
 
