@@ -18,40 +18,45 @@ import Program from "./app/Services/Program/index.js";
 import { TPROGRAM } from "./app/Services/Program/types.js";
 import { PROGRAM_RUN, PROGRAM_STOP } from "./app/Services/Program/constant.js";
 import Console from "./app/Services/Console/index.js";
-import { generateMatrix } from "./helpers.js";
+import { generateMatrix, random } from "./helpers.js";
 import Season from "./app/Services/Season/index.js";
 import { TSeasons } from "./app/Services/Season/types.js";
 import Frame from "./app/Services/Frame/index.js";
+import Random from "./app/Services/Random/index.js";
 
 const app = express();
 const server = createServer(app);
 const io = new Server(server);
 let connections: Socket[] = [];
+let chat: {
+    id: number;
+    username: string;
+    message: string;
+}[] = [];
 
 app.use(express.static("public"));
 
 // program start
+
+Frame.set(() =>
+    setInterval(() => {
+        if (Program.status === PROGRAM_RUN) {
+            Program.frame++;
+            Entities.run();
+
+            Season.next();
+        }
+    }, FRAME_DURATION)
+);
+
+Frame.run();
 
 const initGame = () => {
     Entities.reset();
     Program.reset();
     Console.changeDebugModeStatus(DEBUG_MODE);
     Season.reset();
-    Frame.clear();
     generateMatrix();
-
-    Frame.set(() =>
-        setInterval(() => {
-            if (Program.status === PROGRAM_RUN) {
-                Program.frame++;
-                Entities.run();
-
-                Season.next();
-            }
-        }, FRAME_DURATION)
-    );
-
-    Frame.run();
 };
 
 initGame();
@@ -89,10 +94,10 @@ io.on("connection", (socket: Socket) => {
     connections.push(socket);
 
     socket.data.consoleList = [];
-    socket.data.username = null;
     socket.data.debugMode = false;
 
     sendData(socket);
+    socket.emit("chat-initial", chat);
 
     socket.on("disconnect", () => {
         connections = connections.filter((conn) => conn.id !== socket.id);
@@ -128,6 +133,18 @@ io.on("connection", (socket: Socket) => {
 
     socket.on("game-event", function (args: any) {
         console.log(args);
+    });
+
+    socket.on("chat", (username: string, message: string) => {
+        if (username && message && username.length <= 20 && message.length <= 90) {
+            chat.unshift({
+                id: Date.now() - Random.number(0, 1000),
+                username,
+                message,
+            });
+
+            connections.forEach((conn) => conn.emit("chat", username, message));
+        }
     });
 
     setInterval(() => {

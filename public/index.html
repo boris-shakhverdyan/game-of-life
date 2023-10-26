@@ -116,13 +116,35 @@
                 <div class="center list">
                     <button class="btn success" id="lightning">Lightning</button>
                     <button class="btn success" id="tsunami">Tsunami</button>
-                    <button class="btn success" id="follow-entity">Follow Animal</button>
-                    <!-- <button class="btn danger" id="worm">Worm</button> -->
-                    <!-- <button class="btn danger" id="giganotosaurus">Giganotosaurus</button> -->
                 </div>
             </div>
         </div>
-        <div id="chat"></div>
+        <div id="chat">
+            <div id="chat-header">
+                <form id="chat-form">
+                    <input
+                        type="text"
+                        autocomplete="off"
+                        placeholder="Username"
+                        name="username"
+                        id="chat-username-input"
+                        value="Anonymous"
+                        maxlength="20"
+                    />
+                    <input
+                        type="text"
+                        autocomplete="off"
+                        placeholder="Message"
+                        name="message"
+                        id="chat-message-input"
+                        required
+                        maxlength="90"
+                    />
+                    <button>Send</button>
+                </form>
+            </div>
+            <div id="chat-body"></div>
+        </div>
         <script src="/socket.io/socket.io.js"></script>
         <script src="/assets/packages/p5.js"></script>
         <script src="/assets/scripts/helpers.js"></script>

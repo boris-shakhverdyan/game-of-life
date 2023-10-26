@@ -261,3 +261,30 @@ h3 {
     gap: 10px;
     flex-wrap: wrap;
 }
+
+#chat {
+    width: 800px;
+    background-color: rgb(46, 43, 56);
+    color: rgb(169, 159, 201);
+    margin: auto;
+    padding: 10px;
+    border-radius: 10px;
+    min-height: 86px;
+}
+
+#chat-header {
+    padding-bottom: 10px;
+    border-bottom: 1px solid;
+    margin-bottom: 10px;
+}
+
+#chat input {
+    padding: 5px;
+    border: none;
+    outline: none;
+}
+
+#chat-body {
+    max-height: 350px;
+    overflow-y: auto;
+}

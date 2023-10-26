@@ -195,3 +195,36 @@ for (let season of seasons) {
         socket.emit("season", this.innerText);
     });
 }
+
+let chatBody = $("chat-body");
+let chatForm = $("chat-form");
+
+chatForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    let username = e.target.username.value.trim();
+    let message = e.target.message.value.trim();
+
+    if (username && message && username.length <= 20 && message.length <= 90) {
+        socket.emit("chat", username, message);
+        e.target.message.value = "";
+    }
+});
+
+socket.on("chat", (username, message) => {
+    createMessage(username, message);
+});
+
+function createMessage(username, message) {
+    let p = document.createElement("p");
+    let span = document.createElement("span");
+    span.classList.add("username");
+    span.innerText = username;
+    p.innerText = ": " + message;
+    p.prepend(span);
+    chatBody.prepend(p);
+}
+
+socket.on("chat-initial", (chat) => {
+    chat.forEach(({ username, message }) => createMessage(username, message));
+});

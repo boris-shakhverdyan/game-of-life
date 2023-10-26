@@ -37,6 +37,8 @@ class Console {
     }
 
     public static send(socket: Socket) {
+        let initialLength = socket.data.consoleList.length;
+
         if (socket.data.debugMode) {
             let debugList = this._debugList.filter((item) => socket.data.consoleList.indexOf(item) === -1);
 
@@ -51,7 +53,9 @@ class Console {
             socket.data.consoleList = socket.data.consoleList.concat(newList);
         }
 
-        socket.emit("console", socket.data.consoleList);
+        if (initialLength !== socket.data.consoleList.length) {
+            socket.emit("console", socket.data.consoleList);
+        }
     }
 }
 

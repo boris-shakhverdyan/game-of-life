@@ -11,7 +11,11 @@ abstract class Creature {
     public energy: number = 100;
     public abstract type: number;
     public abstract collection: CreatureCollection<any>;
-    public radius: number = 1;
+    protected _radius: number = 1;
+
+    public get radius(): number {
+        return this._radius;
+    }
 
     constructor(position: Position) {
         this.position = position;

@@ -3,6 +3,8 @@ import { EMPTYCELL_ID, GRASS_ID, GROUND_INDEX, THCIKGRASS_ID } from "../../../Co
 import Entities from "../../Modules/Entities/index.js";
 import Creature from "../Creature/index.js";
 import CreatureCollection from "../../Services/Collection/CreatureCollection.js";
+import Season from "../../Services/Season/index.js";
+import { WINTER } from "../../Services/Season/constants.js";
 
 class Grass extends Creature {
     public index: number = GRASS_ID;
@@ -15,7 +17,7 @@ class Grass extends Creature {
         this.energy += 25;
         this.thickness += 10;
 
-        if (this.energy >= 100) {
+        if (this.energy >= 100 && Season.current !== WINTER) {
             const newPos = this.chooseCell(EMPTYCELL_ID).random();
 
             if (newPos) {

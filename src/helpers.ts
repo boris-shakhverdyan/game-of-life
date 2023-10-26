@@ -21,9 +21,9 @@ export function random(minOrArray: number | Array<any>, max?: number) {
 export function generateMatrix() {
     Matrix.generate(20, 20, [
         { collection: Entities.grass, count: 25 },
-        { collection: Entities.sheep, count: 2 },
-        { collection: Entities.wolf, count: 2 },
-        { collection: Entities.human, count: 2 },
+        { collection: Entities.sheep, count: 10 },
+        { collection: Entities.wolf, count: 4 },
+        { collection: Entities.human, count: 4 },
         { collection: Entities.rabbit, count: 10 },
     ]);
 }

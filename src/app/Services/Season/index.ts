@@ -5,7 +5,7 @@ import { TSeasons } from "./types.js";
 class Season {
     private static _current: number = 0;
     private static _list: TSeasons[] = [SUMMER, AUTUMN, WINTER, SPRING];
-    private static _changeRate: number = 20;
+    private static _changeRate: number = 10;
     private static _currentRate: number = 0;
     private static _autoChangeMode: boolean = true;
 
@@ -18,18 +18,16 @@ class Season {
     }
 
     public static next() {
-        if (this._autoChangeMode) {
-            this._currentRate++;
+        this._currentRate++;
 
-            if (this._currentRate >= this._changeRate) {
-                this.nextSeason();
-            }
+        if (this._autoChangeMode && this._currentRate >= this._changeRate) {
+            this.nextSeason();
         }
     }
 
     public static reset() {
-        Season.set(START_SEASON);
-        Season.setAutoChangeMode(AUTO_SEASON);
+        this.set(START_SEASON);
+        this.setAutoChangeMode(AUTO_SEASON);
     }
 
     private static nextSeason() {
