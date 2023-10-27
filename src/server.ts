@@ -13,11 +13,15 @@ import {
     SHEEP_ID,
     THCIKGRASS_ID,
     E_LIGHTNING_ID,
+    E_TSUNAMI_ID,
+    E_GAMEOVER_1,
+    E_GAMEOVER_2,
+    E_GAMEOVER_3,
 } from "./Constants/entities.js";
 import { DEBUG_MODE, FRAME_DURATION, PORT } from "./Constants/app.js";
 import Program from "./app/Services/Program/index.js";
 import { TPROGRAM } from "./app/Services/Program/types.js";
-import { PROGRAM_RUN, PROGRAM_STOP } from "./app/Services/Program/constant.js";
+import { PROGRAM_GAMEOVER, PROGRAM_RUN, PROGRAM_STOP } from "./app/Services/Program/constant.js";
 import Console from "./app/Services/Console/index.js";
 import { generateMatrix } from "./helpers.js";
 import Season from "./app/Services/Season/index.js";
@@ -63,6 +67,11 @@ const sendData = (socket: Socket) => {
             { index: RABBIT_ID, type: ANIMAL_INDEX, color: { default: "royalblue" } },
 
             { index: E_LIGHTNING_ID, type: GROUND_INDEX, color: { default: "#ffff00" } },
+            { index: E_TSUNAMI_ID, type: GROUND_INDEX, color: { default: "aqua" } },
+
+            { index: E_GAMEOVER_1, type: GROUND_INDEX, color: { default: "darkred" } },
+            { index: E_GAMEOVER_2, type: GROUND_INDEX, color: { default: "royalblue" } },
+            { index: E_GAMEOVER_3, type: GROUND_INDEX, color: { default: "gold" } },
         ],
         season: Season.current,
         options: {
@@ -75,14 +84,23 @@ const sendData = (socket: Socket) => {
     Console.send(socket);
 
     socket.emit("draw", data);
+
+    socket.emit("event-going", Events.active ? "active" : "inactive");
+
+    if (Entities.isEmpty() && !Events.active) {
+        Program.gameOver();
+        generateMatrix(false);
+    }
 };
 
 setInterval(() => {
-    if (Program.status === PROGRAM_RUN) {
-        Program.frame++;
-        Entities.run();
+    if ([PROGRAM_RUN, PROGRAM_GAMEOVER].includes(Program.status)) {
+        if (Program.status === PROGRAM_RUN) {
+            Entities.run();
+            Season.next();
+        }
 
-        Season.next();
+        Program.frame++;
 
         Events.run();
 
@@ -134,6 +152,9 @@ io.on("connection", (socket: Socket) => {
         switch (action) {
             case "lightning":
                 Events.lightning(new Position(args.x, args.y, GROUND_INDEX));
+                return;
+            case "tsunami":
+                Events.tsunami();
                 return;
         }
     });

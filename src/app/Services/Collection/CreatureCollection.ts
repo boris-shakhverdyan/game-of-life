@@ -17,6 +17,12 @@ class CreatureCollection<T extends Creature> extends Collection<T> {
         this.name = name;
     }
 
+    public filter(callbackfn: (value: T, index: number, array: T[]) => boolean) {
+        this._arr = this._arr.filter(callbackfn);
+
+        return this;
+    }
+
     public add(position: Position) {
         this._arr.push(new this.obj(position));
 

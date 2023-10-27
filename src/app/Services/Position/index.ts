@@ -1,3 +1,4 @@
+import { GROUND_INDEX } from "../../../Constants/entities.js";
 import { ICacheable } from "../Cache/types.js";
 
 class Position implements ICacheable<Position> {
@@ -9,6 +10,10 @@ class Position implements ICacheable<Position> {
         this.x = x;
         this.y = y;
         this.type = type;
+    }
+
+    public isInRow(y: number) {
+        return this.y === y;
     }
 
     public isEqual(position: Position, isStrict: boolean = true): boolean {
@@ -34,6 +39,16 @@ class Position implements ICacheable<Position> {
         if (withType) {
             this.type = type;
         }
+    }
+
+    public static createFrom(list: [number, number][]) {
+        let result = [];
+
+        for (let [x, y] of list) {
+            result.push(new Position(x, y, GROUND_INDEX));
+        }
+
+        return result;
     }
 }
 

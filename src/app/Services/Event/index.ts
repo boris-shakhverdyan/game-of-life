@@ -1,13 +1,18 @@
 import Events from "../../Events/index.js";
+import uniqid from "uniqid";
 
 abstract class Event {
-    abstract id: string;
+    public id: string = uniqid();
     abstract name: string;
 
     abstract do(): void;
 
-    protected resolve() {
+    protected resolve(setActive: boolean = false) {
         Events.delete(this.id);
+
+        if (setActive) {
+            Events.active = false;
+        }
     }
 }
 

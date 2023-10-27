@@ -17,6 +17,8 @@ import EntityCollection from "../../Services/Collection/EntityCollection.js";
 import Sheep from "../../Entities/Sheep/index.js";
 import Wolf from "../../Entities/Wolf/index.js";
 import Position from "../../Services/Position/index.js";
+import Entity from "../../Entities/Entity/index.js";
+import Creature from "../../Entities/Creature/index.js";
 
 class Entities {
     public static grass = new CreatureCollection<Grass>(
@@ -66,6 +68,26 @@ class Entities {
         this.human.deleteByPos(position, false);
 
         return this;
+    }
+
+    static filterForAll(callbackfn: (value: Creature, index: number, array: Creature[]) => boolean) {
+        this.grass.filter(callbackfn);
+        this.sheep.filter(callbackfn);
+        this.wolf.filter(callbackfn);
+        this.rabbit.filter(callbackfn);
+        this.human.filter(callbackfn);
+
+        return this;
+    }
+
+    static isEmpty(): boolean {
+        return (
+            this.grass.size === 0 &&
+            this.sheep.size === 0 &&
+            this.wolf.size === 0 &&
+            this.rabbit.size === 0 &&
+            this.human.size === 0
+        );
     }
 }
 

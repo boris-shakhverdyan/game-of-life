@@ -1,11 +1,26 @@
 import Event from "../Services/Event/index.js";
 import Position from "../Services/Position/index.js";
+import GameOver from "./GameOver/index.js";
 import Lightning from "./Lightning/index.js";
+import Tsunami from "./Tsunami/index.js";
 class Events {
     private static _stack: Event[] = [];
+    public static active: boolean = false;
 
     public static lightning(position: Position) {
         this._stack.push(new Lightning(position));
+    }
+
+    public static tsunami() {
+        this._stack.push(new Tsunami());
+
+        this.active = true;
+    }
+
+    public static gameOver() {
+        this._stack = [];
+        this._stack.push(new GameOver());
+        this.active = true;
     }
 
     public static run() {
@@ -18,6 +33,7 @@ class Events {
 
     public static clear() {
         this._stack = [];
+        this.active = false;
     }
 }
 

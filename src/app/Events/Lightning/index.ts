@@ -4,10 +4,8 @@ import Directions from "../../Services/Directions/index.js";
 import Event from "../../Services/Event/index.js";
 import Matrix from "../../Services/Matrix/index.js";
 import Position from "../../Services/Position/index.js";
-import uniqid from "uniqid";
 
 class Lightning extends Event {
-    public id: string = uniqid();
     public name: string = "Lightning";
     public position: Position;
     public gen: Generator<undefined, void, unknown>;
@@ -58,9 +56,7 @@ class Lightning extends Event {
         Entities.deleteByPos(this.position);
         Matrix.setEmptyAll(this.position);
 
-        this.resolve();
-
-        return;
+        return this.resolve();
     }
 }
 

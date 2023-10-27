@@ -4,10 +4,30 @@ let isMouseWantToSelect = false;
 let action = null;
 
 // actions
-const lightningBtn = document.getElementById("lightning");
-lightningBtn.addEventListener("click", function () {
+const lightningBtn = $("lightning");
+lightningBtn.addEventListener("click", () => {
     isMouseWantToSelect = true;
     action = "lightning";
+});
+
+const tsunamiBtn = $("tsunami");
+tsunamiBtn.addEventListener("click", () => {
+    socket.emit("game-event", {
+        action: "tsunami",
+    });
+
+    tsunamiBtn.setAttribute("disabled", "");
+    lightningBtn.setAttribute("disabled", "");
+});
+
+socket.on("event-going", (event) => {
+    if (event === "active") {
+        tsunamiBtn.setAttribute("disabled", "");
+        lightningBtn.setAttribute("disabled", "");
+    } else {
+        tsunamiBtn.removeAttribute("disabled");
+        lightningBtn.removeAttribute("disabled");
+    }
 });
 
 function setup() {
@@ -20,7 +40,7 @@ function setup() {
 
             if (program === "RUN") {
                 programStartBtn.click();
-            } else {
+            } else if (program === "STOP") {
                 programStopBtn.click();
             }
 

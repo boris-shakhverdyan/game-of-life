@@ -2,7 +2,7 @@ import { repeat } from "../../../helpers.js";
 import Position from "../Position/index.js";
 import Random from "../Random/index.js";
 import { TMatrix } from "./types.js";
-import { EMPTYCELL_ID } from "../../../Constants/entities.js";
+import { EMPTYCELL_ID, GROUND_INDEX } from "../../../Constants/entities.js";
 import CreatureCollection from "../Collection/CreatureCollection.js";
 import Cache from "../Cache/index.js";
 
@@ -15,6 +15,26 @@ class Matrix {
         }
 
         return false;
+    }
+
+    public static setAllInRow(y: number, value: number) {
+        for (let x = 0; x < this.WIDTH; x++) {
+            let position = new Position(x, y, GROUND_INDEX);
+            this.setEmptyAll(position);
+
+            this.set(position, value);
+        }
+
+        return this;
+    }
+
+    public static setAllInColumn(x: number, value: number) {
+        for (let y = 0; y < this.HEIGHT; y++) {
+            let position = new Position(x, y, GROUND_INDEX);
+            this.setEmptyAll(position);
+
+            this.set(position, value);
+        }
     }
 
     public static get(): TMatrix<number> {
