@@ -27,10 +27,10 @@ const addMessage = (username, message) => {
     chatBody.prepend(p);
 };
 
-socket.on("chat", (username, message) => addMessage(username, message));
+socket.on("chat", ({ username, text }) => addMessage(username, text));
 
-socket.on("chat-initial", (chat) => {
-    chat.forEach(({ username, message }) => addMessage(username, message));
+socket.on("chat-all", (chat) => {
+    chat.forEach(({ username, text }) => addMessage(username, text));
 });
 
 chatMuteBtn.addEventListener("click", () => {

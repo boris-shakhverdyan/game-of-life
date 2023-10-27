@@ -18,20 +18,15 @@ import Program from "./app/Services/Program/index.js";
 import { TPROGRAM } from "./app/Services/Program/types.js";
 import { PROGRAM_RUN, PROGRAM_STOP } from "./app/Services/Program/constant.js";
 import Console from "./app/Services/Console/index.js";
-import { generateMatrix, random } from "./helpers.js";
+import { generateMatrix } from "./helpers.js";
 import Season from "./app/Services/Season/index.js";
 import { TSeasons } from "./app/Services/Season/types.js";
-import Random from "./app/Services/Random/index.js";
 import Connections from "./app/Core/Connections/index.js";
+import Chat from "./app/Services/Chat/index.js";
 
 const app = express();
 const server = createServer(app);
 const io = new Server(server);
-let chat: {
-    id: number;
-    username: string;
-    message: string;
-}[] = [];
 
 app.use(express.static("public"));
 
@@ -95,7 +90,7 @@ io.on("connection", (socket: Socket) => {
 
     sendData(socket);
 
-    socket.emit("chat-initial", chat);
+    Chat.sendAll(socket);
 
     socket.on("disconnect", () => Connections.disconnect(socket));
 
@@ -117,7 +112,7 @@ io.on("connection", (socket: Socket) => {
         Connections.map(sendData);
     });
 
-    socket.on("debug-mode", function (value: boolean) {
+    socket.on("debug-mode", (value: boolean) => {
         socket.data.debugMode = value;
     });
 
@@ -131,17 +126,7 @@ io.on("connection", (socket: Socket) => {
         console.log(args);
     });
 
-    socket.on("chat", (username: string, message: string) => {
-        if (username && message && username.length <= 20 && message.length <= 90) {
-            chat.unshift({
-                id: Date.now() - Random.number(0, 1000),
-                username,
-                message,
-            });
-
-            Connections.send("chat", username, message);
-        }
-    });
+    socket.on("chat", (username: string, text: string) => Chat.add(username, text));
 });
 
 // program end
