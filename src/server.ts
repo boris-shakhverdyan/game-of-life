@@ -21,13 +21,12 @@ import Console from "./app/Services/Console/index.js";
 import { generateMatrix, random } from "./helpers.js";
 import Season from "./app/Services/Season/index.js";
 import { TSeasons } from "./app/Services/Season/types.js";
-import Frame from "./app/Services/Frame/index.js";
 import Random from "./app/Services/Random/index.js";
+import Connections from "./app/Core/Connections/index.js";
 
 const app = express();
 const server = createServer(app);
 const io = new Server(server);
-let connections: Socket[] = [];
 let chat: {
     id: number;
     username: string;
@@ -37,19 +36,6 @@ let chat: {
 app.use(express.static("public"));
 
 // program start
-
-Frame.set(() =>
-    setInterval(() => {
-        if (Program.status === PROGRAM_RUN) {
-            Program.frame++;
-            Entities.run();
-
-            Season.next();
-        }
-    }, FRAME_DURATION)
-);
-
-Frame.run();
 
 const initGame = () => {
     Entities.reset();
@@ -90,18 +76,28 @@ const sendData = (socket: Socket) => {
     socket.emit("draw", data);
 };
 
+setInterval(() => {
+    if (Program.status === PROGRAM_RUN) {
+        Program.frame++;
+        Entities.run();
+
+        Season.next();
+
+        Connections.map(sendData);
+    }
+}, FRAME_DURATION);
+
 io.on("connection", (socket: Socket) => {
-    connections.push(socket);
+    Connections.connect(socket);
 
     socket.data.consoleList = [];
     socket.data.debugMode = false;
 
     sendData(socket);
+
     socket.emit("chat-initial", chat);
 
-    socket.on("disconnect", () => {
-        connections = connections.filter((conn) => conn.id !== socket.id);
-    });
+    socket.on("disconnect", () => Connections.disconnect(socket));
 
     socket.on("program-status", function (status: TPROGRAM | "RESTART") {
         switch (status) {
@@ -118,7 +114,7 @@ io.on("connection", (socket: Socket) => {
 
         Console.print(`Program: ${status}`, "danger");
 
-        connections.map((conn) => sendData(conn));
+        Connections.map(sendData);
     });
 
     socket.on("debug-mode", function (value: boolean) {
@@ -143,15 +139,9 @@ io.on("connection", (socket: Socket) => {
                 message,
             });
 
-            connections.forEach((conn) => conn.emit("chat", username, message));
+            Connections.send("chat", username, message);
         }
     });
-
-    setInterval(() => {
-        if (Program.status === PROGRAM_RUN) {
-            sendData(socket);
-        }
-    }, FRAME_DURATION);
 });
 
 // program end

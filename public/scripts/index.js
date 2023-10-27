@@ -1,9 +1,3 @@
-const wrapper = $("wrapper");
-const programStatusHTML = $("program-status");
-
-const SIDE = 20;
-const BACKGROUND_COLOR = "#5d3d25";
-const SIDE_E = SIDE * 0.75;
 let canvas = null;
 let isCanvasEventSetups = false;
 let isMouseWantToSelect = false;
@@ -14,12 +8,6 @@ const lightningBtn = document.getElementById("lightning");
 lightningBtn.addEventListener("click", function () {
     isMouseWantToSelect = true;
     action = "lightning";
-});
-
-socket.on("console", (list) => {
-    for (let message of list) {
-        printToConsole(message);
-    }
 });
 
 function setup() {

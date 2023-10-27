@@ -1,0 +1,56 @@
+#console {
+    width: 500px;
+    background-color: rgb(26, 26, 26);
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+#console p {
+    padding: 0 5px;
+}
+
+#console::-webkit-scrollbar {
+    width: 5px;
+    background-color: #352d42;
+}
+
+#console::-webkit-scrollbar-thumb {
+    background-color: #50465f;
+}
+
+#console p {
+    color: white;
+    font-family: "Courier New", Courier, monospace;
+}
+
+#console p.danger {
+    color: white;
+    background-color: crimson;
+}
+
+#console p.warning {
+    color: black;
+    background-color: orange;
+}
+
+#console p.success {
+    color: white;
+    background-color: forestgreen;
+}
+
+#console-clear {
+    padding: 5px 10px;
+    color: rgb(114, 92, 72);
+    border: 1px solid;
+    position: absolute;
+    top: 8px;
+    left: calc(500px - 60px);
+    background-color: transparent;
+    border-radius: 5px;
+}
+
+#console-clear:hover {
+    background-color: rgb(114, 92, 72);
+    color: black;
+    border: 1px solid rgb(114, 92, 72);
+}

@@ -3,7 +3,9 @@
     <head>
         <title>Game of Life by Boris Shakhverdyan</title>
         <meta charset="UTF-8" />
-        <link rel="stylesheet" href="/assets/style.css" />
+        <link rel="stylesheet" href="/styles/style.css" />
+        <link rel="stylesheet" href="/styles/console.css" />
+        <link rel="stylesheet" href="/styles/chat.css" />
     </head>
 
     <body>
@@ -81,10 +83,6 @@
                 </tr>
             </thead>
         </table>
-
-        <!-- <div id="actions-old">
-            <button id="lightning">Lightning</button>
-        </div> -->
         <div id="wrapper">
             <button id="console-clear" class="debuggable hide">Clear</button>
             <div class="sidebar debuggable hide" id="console"></div>
@@ -120,6 +118,10 @@
             </div>
         </div>
         <div id="chat">
+            <div id="chat-mutter" class="hide">
+                <span>Chat muted.</span>
+                <button id="chat-unmute">Unmute</button>
+            </div>
             <div id="chat-header">
                 <form id="chat-form">
                     <input
@@ -142,12 +144,19 @@
                     />
                     <button>Send</button>
                 </form>
+                <button id="chat-mute">Mute</button>
             </div>
             <div id="chat-body"></div>
         </div>
         <script src="/socket.io/socket.io.js"></script>
-        <script src="/assets/packages/p5.js"></script>
-        <script src="/assets/scripts/helpers.js"></script>
-        <script src="/assets/scripts/index.js"></script>
+        <script src="/modules/p5.js"></script>
+        <script src="/scripts/helpers.js"></script>
+        <script src="/scripts/constants.js"></script>
+        <script src="/scripts/console.js"></script>
+        <script src="/scripts/chat.js"></script>
+        <script src="/scripts/program.js"></script>
+        <script src="/scripts/seasons.js"></script>
+        <script src="/scripts/app.js"></script>
+        <script src="/scripts/index.js"></script>
     </body>
 </html>
