@@ -16,6 +16,7 @@ import Human from "../../Entities/Human/index.js";
 import EntityCollection from "../../Services/Collection/EntityCollection.js";
 import Sheep from "../../Entities/Sheep/index.js";
 import Wolf from "../../Entities/Wolf/index.js";
+import Position from "../../Services/Position/index.js";
 
 class Entities {
     public static grass = new CreatureCollection<Grass>(
@@ -55,6 +56,16 @@ class Entities {
         this.wolf = new EntityCollection("Wolf", WOLF_ID, Wolf, ANIMAL_INDEX);
         this.rabbit = new EntityCollection("Rabbit", RABBIT_ID, Rabbit, ANIMAL_INDEX);
         this.human = new EntityCollection("Human", HUMAN_ID, Human, ANIMAL_INDEX);
+    }
+
+    static deleteByPos(position: Position) {
+        this.grass.deleteByPos(position, false);
+        this.sheep.deleteByPos(position, false);
+        this.wolf.deleteByPos(position, false);
+        this.rabbit.deleteByPos(position, false);
+        this.human.deleteByPos(position, false);
+
+        return this;
     }
 }
 

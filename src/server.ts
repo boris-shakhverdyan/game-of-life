@@ -12,6 +12,7 @@ import {
     RABBIT_ID,
     SHEEP_ID,
     THCIKGRASS_ID,
+    E_LIGHTNING_ID,
 } from "./Constants/entities.js";
 import { DEBUG_MODE, FRAME_DURATION, PORT } from "./Constants/app.js";
 import Program from "./app/Services/Program/index.js";
@@ -23,6 +24,8 @@ import Season from "./app/Services/Season/index.js";
 import { TSeasons } from "./app/Services/Season/types.js";
 import Connections from "./app/Core/Connections/index.js";
 import Chat from "./app/Services/Chat/index.js";
+import Events from "./app/Events/index.js";
+import Position from "./app/Services/Position/index.js";
 
 const app = express();
 const server = createServer(app);
@@ -38,6 +41,7 @@ const initGame = () => {
     Console.changeDebugModeStatus(DEBUG_MODE);
     Season.reset();
     generateMatrix();
+    Events.clear();
 };
 
 initGame();
@@ -57,6 +61,8 @@ const sendData = (socket: Socket) => {
             { index: WOLF_ID, type: ANIMAL_INDEX, color: { default: "red" } },
             { index: HUMAN_ID, type: ANIMAL_INDEX, color: { default: "purple" } },
             { index: RABBIT_ID, type: ANIMAL_INDEX, color: { default: "royalblue" } },
+
+            { index: E_LIGHTNING_ID, type: GROUND_INDEX, color: { default: "#ffff00" } },
         ],
         season: Season.current,
         options: {
@@ -77,6 +83,8 @@ setInterval(() => {
         Entities.run();
 
         Season.next();
+
+        Events.run();
 
         Connections.map(sendData);
     }
@@ -122,8 +130,12 @@ io.on("connection", (socket: Socket) => {
         Console.print(`Season: ${value}`, "warning");
     });
 
-    socket.on("game-event", function (args: any) {
-        console.log(args);
+    socket.on("game-event", function ({ action, args }: { action: string; args: any }) {
+        switch (action) {
+            case "lightning":
+                Events.lightning(new Position(args.x, args.y, GROUND_INDEX));
+                return;
+        }
     });
 
     socket.on("chat", (username: string, text: string) => Chat.add(username, text));

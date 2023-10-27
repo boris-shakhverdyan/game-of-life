@@ -23,8 +23,8 @@ class CreatureCollection<T extends Creature> extends Collection<T> {
         return this;
     }
 
-    public deleteByPos(position: Position) {
-        this._arr = this._arr.filter((item) => !position.isEqual(item.position));
+    public deleteByPos(position: Position, strict: boolean = true) {
+        this._arr = this._arr.filter((item) => !position[strict ? "isEqual" : "isInCoords"](item.position));
 
         return this;
     }

@@ -53,16 +53,13 @@ function setup() {
             if (!isCanvasEventSetups) {
                 canvas.mouseClicked(function () {
                     if (action && isMouseWantToSelect) {
-                        socket.emit("game-event", {
-                            action,
-                            x: Math.floor(mouseX / 20),
-                            y: Math.floor(mouseY / 20),
-                        });
-                        console.log("game-event", {
-                            action,
-                            x: Math.floor(mouseX / 20),
-                            y: Math.floor(mouseY / 20),
-                        });
+                        let x = Math.floor(mouseX / 20);
+                        let y = Math.floor(mouseY / 20);
+
+                        let data = { action, args: { x, y } };
+
+                        socket.emit("game-event", data);
+                        console.log("game-event", data);
                         action = null;
                         isMouseWantToSelect = false;
                     }

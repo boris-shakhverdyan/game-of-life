@@ -33,6 +33,10 @@ class Matrix {
         this._matrix[position.y][position.x][type] = EMPTYCELL_ID;
     }
 
+    public static setEmptyAll(position: Position) {
+        this._matrix[position.y][position.x] = [EMPTYCELL_ID, EMPTYCELL_ID, EMPTYCELL_ID];
+    }
+
     public static isEqual(
         position: Position,
         value: number | number[],

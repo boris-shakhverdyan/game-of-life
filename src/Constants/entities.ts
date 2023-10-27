@@ -10,3 +10,6 @@ export const WOLF_ID: number = 3;
 export const HUMAN_ID: number = 4;
 export const RABBIT_ID: number = 5;
 export const THCIKGRASS_ID: number = 6;
+
+// EVENTS
+export const E_LIGHTNING_ID: number = 10;
