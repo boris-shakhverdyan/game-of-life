@@ -32,6 +32,7 @@ import Connections from "./app/Core/Connections/index.js";
 import Chat from "./app/Services/Chat/index.js";
 import Events from "./app/Events/index.js";
 import Position from "./app/Services/Position/index.js";
+import Statistics from "./app/Services/Statistics/index.js";
 
 const app = express();
 const server = createServer(app);
@@ -42,6 +43,7 @@ app.use(express.static("public"));
 // program start
 
 const initGame = () => {
+    Statistics.reset();
     Entities.reset();
     Program.reset();
     Console.changeDebugModeStatus(DEBUG_MODE);
@@ -91,7 +93,7 @@ const sendData = (socket: Socket) => {
 
     socket.emit("event-going", Events.active ? "active" : "inactive");
 
-    if (Entities.isEmpty() && !Events.active) {
+    if (Entities.isEmpty() && !Events.active && ![PROGRAM_GAMEOVER, PROGRAM_STOP].includes(Program.status)) {
         Program.gameOver();
         generateMatrix(false);
     }

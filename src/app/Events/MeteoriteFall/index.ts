@@ -33,6 +33,7 @@ class MeteoriteFall extends Event {
         for (let i = 0; i < count || this.hotList.length; i++) {
             for (let item of this.hotList) {
                 Entities.deleteByPos(item);
+                Matrix.setEmptyAll(item);
                 Matrix.set(item, E_METEORITE_FALL_COOLED_ID);
 
                 this.coldList.push(item);
@@ -54,6 +55,7 @@ class MeteoriteFall extends Event {
 
         for (let item of this.coldList) {
             Matrix.setEmptyAll(item);
+            Entities.deleteByPos(item);
         }
 
         this.coldList = [];
@@ -68,10 +70,12 @@ class MeteoriteFall extends Event {
         this.hotList.push(pos);
 
         for (let position of Directions.get(pos, 2)) {
-            Matrix.setEmptyAll(position);
-            Entities.deleteByPos(position);
-            Matrix.set(position, E_METEORITE_FALL_HOT_ID);
-            this.hotList.push(position);
+            if (Matrix.isWithin(position)) {
+                Matrix.setEmptyAll(position);
+                Entities.deleteByPos(position);
+                Matrix.set(position, E_METEORITE_FALL_HOT_ID);
+                this.hotList.push(position);
+            }
         }
     }
 }

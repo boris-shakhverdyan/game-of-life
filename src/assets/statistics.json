@@ -1,0 +1,14 @@
+{
+    "entitiesBirthsCount": {
+        "Grass": 512,
+        "Sheep.Male": 6,
+        "Sheep.Female": 4,
+        "Wolf.Female": 3,
+        "Wolf.Male": 1,
+        "Human.Male": 4,
+        "Rabbit.Female": 7,
+        "Rabbit.Male": 3
+    },
+    "totalEventsCount": { "Meteorite Fall": 3, "Lightning": 2, "Tsunami": 1, "GameOver": 1 },
+    "totalTimesSeasonChanged": 17
+}

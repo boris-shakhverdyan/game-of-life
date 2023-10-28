@@ -4,6 +4,8 @@ import Entity from "../Entity/index.js";
 import Age from "../../Services/Age/index.js";
 import { EatableList } from "../Entity/types.js";
 import EntityCollection from "../../Services/Collection/EntityCollection.js";
+import Position from "../../Services/Position/index.js";
+import Statistics from "../../Services/Statistics/index.js";
 
 class Wolf extends Entity {
     public index: number = WOLF_ID;
@@ -14,6 +16,12 @@ class Wolf extends Entity {
         { collection: Entities.sheep, energy: 70 },
         { collection: Entities.rabbit, energy: 25 },
     ];
+
+    constructor(position: Position) {
+        super(position);
+
+        Statistics.increaseEntitiesBirthCount("Wolf." + this.gender);
+    }
 
     public registerActions(): void {
         super.registerActions();

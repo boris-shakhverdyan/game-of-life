@@ -1,4 +1,5 @@
 import { AUTO_SEASON, START_SEASON } from "../../../Constants/app.js";
+import Statistics from "../Statistics/index.js";
 import { AUTUMN, SPRING, SUMMER, WINTER } from "./constants.js";
 import { TSeasons } from "./types.js";
 
@@ -39,11 +40,15 @@ class Season {
 
         this._current = result;
         this._currentRate = 0;
+
+        Statistics.totalTimesSeasonChanged++;
     }
 
     public static set(value: TSeasons) {
         this._current = this._list.indexOf(value);
         this._currentRate = 0;
+
+        Statistics.totalTimesSeasonChanged++;
     }
 
     public static setChangeRate(value: number) {

@@ -9,6 +9,7 @@ import Entities from "../../Modules/Entities/index.js";
 import Event from "../../Services/Event/index.js";
 import Matrix from "../../Services/Matrix/index.js";
 import Position from "../../Services/Position/index.js";
+import Statistics from "../../Services/Statistics/index.js";
 
 class GameOver extends Event {
     public name: string = "GameOver";
@@ -251,6 +252,8 @@ class GameOver extends Event {
         }
 
         yield;
+
+        Statistics.updateFile();
 
         return this.resolve(true);
     }

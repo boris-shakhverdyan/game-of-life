@@ -30,6 +30,8 @@ class Console {
     }
 
     public static print(text: string, type: TConsoleNodeType = "default") {
+        console.log(text);
+
         this._list.push({
             text,
             type,

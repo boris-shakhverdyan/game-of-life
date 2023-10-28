@@ -5,6 +5,8 @@ import Creature from "../Creature/index.js";
 import CreatureCollection from "../../Services/Collection/CreatureCollection.js";
 import Season from "../../Services/Season/index.js";
 import { WINTER } from "../../Services/Season/constants.js";
+import Position from "../../Services/Position/index.js";
+import Statistics from "../../Services/Statistics/index.js";
 
 class Grass extends Creature {
     public index: number = GRASS_ID;
@@ -12,6 +14,12 @@ class Grass extends Creature {
     public collection: CreatureCollection<Grass> = Entities.grass;
     public type: number = GROUND_INDEX;
     public energy: number = 0;
+
+    constructor(position: Position) {
+        super(position);
+
+        Statistics.increaseEntitiesBirthCount("Grass");
+    }
 
     public mul() {
         this.energy += 25;
