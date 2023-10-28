@@ -150,8 +150,6 @@ io.on("connection", (socket: Socket) => {
 
     socket.on("season", function (value: TSeasons) {
         Season.set(value);
-
-        Console.print(`Season: ${value}`, "warning");
     });
 
     socket.on("game-event", function ({ action, args }: { action: string; args: any }) {

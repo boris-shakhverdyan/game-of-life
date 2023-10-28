@@ -45,14 +45,18 @@ function setup() {
             $("program-status").innerText = program;
 
             if (program === "RUN") {
-                programStartBtn.click();
+                programStartBtn.setAttribute("disabled", true);
+                programStopBtn.removeAttribute("disabled");
             } else if (program === "STOP") {
-                programStopBtn.click();
+                programStopBtn.setAttribute("disabled", true);
+                programStartBtn.removeAttribute("disabled");
             }
 
             for (let s of seasons) {
                 if (s.innerText === season) {
-                    s.click();
+                    s.setAttribute("disabled", "");
+                } else {
+                    s.removeAttribute("disabled");
                 }
             }
 
