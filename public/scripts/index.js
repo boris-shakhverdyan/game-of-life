@@ -15,18 +15,24 @@ tsunamiBtn.addEventListener("click", () => {
     socket.emit("game-event", {
         action: "tsunami",
     });
+});
 
-    tsunamiBtn.setAttribute("disabled", "");
-    lightningBtn.setAttribute("disabled", "");
+const meteoriteFallBtn = $("meteorite-fall");
+meteoriteFallBtn.addEventListener("click", () => {
+    socket.emit("game-event", {
+        action: "meteorite-fall",
+    });
 });
 
 socket.on("event-going", (event) => {
     if (event === "active") {
         tsunamiBtn.setAttribute("disabled", "");
         lightningBtn.setAttribute("disabled", "");
+        meteoriteFallBtn.setAttribute("disabled", "");
     } else {
         tsunamiBtn.removeAttribute("disabled");
         lightningBtn.removeAttribute("disabled");
+        meteoriteFallBtn.removeAttribute("disabled");
     }
 });
 

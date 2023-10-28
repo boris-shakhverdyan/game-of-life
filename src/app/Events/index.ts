@@ -2,6 +2,7 @@ import Event from "../Services/Event/index.js";
 import Position from "../Services/Position/index.js";
 import GameOver from "./GameOver/index.js";
 import Lightning from "./Lightning/index.js";
+import MeteoriteFall from "./MeteoriteFall/index.js";
 import Tsunami from "./Tsunami/index.js";
 class Events {
     private static _stack: Event[] = [];
@@ -20,6 +21,11 @@ class Events {
     public static gameOver() {
         this._stack = [];
         this._stack.push(new GameOver());
+        this.active = true;
+    }
+
+    public static meteoriteFall() {
+        this._stack.push(new MeteoriteFall());
         this.active = true;
     }
 

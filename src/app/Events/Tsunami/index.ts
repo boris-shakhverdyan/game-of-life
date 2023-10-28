@@ -18,8 +18,6 @@ class Tsunami extends Event {
     }
 
     public *run() {
-        yield;
-
         for (let y = 0; y < Matrix.HEIGHT; y++) {
             for (let i = 0; i <= y; i++) {
                 Matrix.setAllInRow(i, E_TSUNAMI_ID);

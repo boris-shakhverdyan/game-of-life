@@ -14,6 +14,8 @@ export const THCIKGRASS_ID: number = 6;
 // EVENTS
 export const E_LIGHTNING_ID: number = 10;
 export const E_TSUNAMI_ID: number = 11;
+export const E_METEORITE_FALL_HOT_ID: number = 12;
+export const E_METEORITE_FALL_COOLED_ID: number = 13;
 
 export const E_GAMEOVER_1: number = 99;
 export const E_GAMEOVER_2: number = 98;

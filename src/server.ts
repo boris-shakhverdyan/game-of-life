@@ -17,6 +17,8 @@ import {
     E_GAMEOVER_1,
     E_GAMEOVER_2,
     E_GAMEOVER_3,
+    E_METEORITE_FALL_HOT_ID,
+    E_METEORITE_FALL_COOLED_ID,
 } from "./Constants/entities.js";
 import { DEBUG_MODE, FRAME_DURATION, PORT } from "./Constants/app.js";
 import Program from "./app/Services/Program/index.js";
@@ -68,6 +70,8 @@ const sendData = (socket: Socket) => {
 
             { index: E_LIGHTNING_ID, type: GROUND_INDEX, color: { default: "#ffff00" } },
             { index: E_TSUNAMI_ID, type: GROUND_INDEX, color: { default: "aqua" } },
+            { index: E_METEORITE_FALL_HOT_ID, type: GROUND_INDEX, color: { default: "orangered" } },
+            { index: E_METEORITE_FALL_COOLED_ID, type: GROUND_INDEX, color: { default: "#6e4f38" } },
 
             { index: E_GAMEOVER_1, type: GROUND_INDEX, color: { default: "darkred" } },
             { index: E_GAMEOVER_2, type: GROUND_INDEX, color: { default: "royalblue" } },
@@ -155,6 +159,9 @@ io.on("connection", (socket: Socket) => {
                 return;
             case "tsunami":
                 Events.tsunami();
+                return;
+            case "meteorite-fall":
+                Events.meteoriteFall();
                 return;
         }
     });

@@ -25,8 +25,6 @@ class GameOver extends Event {
     }
 
     public *run() {
-        yield;
-
         Matrix.setAllInRow(0, 99);
         Matrix.setAllInRow(Matrix.HEIGHT - 1, 99);
         Matrix.setAllInColumn(Matrix.WIDTH - 1, 99);

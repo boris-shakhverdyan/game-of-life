@@ -22,8 +22,6 @@ class Lightning extends Event {
     }
 
     public *run() {
-        yield;
-
         if (Matrix.isWithin(this.position)) {
             Entities.deleteByPos(this.position);
             Matrix.setEmptyAll(this.position);
