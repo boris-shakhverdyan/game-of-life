@@ -1,5 +1,6 @@
 import CreatureCollection from "../../Services/Collection/CreatureCollection.js";
 import Collection from "../../Services/Collection/index.js";
+import Console from "../../Services/Console/index.js";
 import Directions from "../../Services/Directions/index.js";
 import Matrix from "../../Services/Matrix/index.js";
 import Position from "../../Services/Position/index.js";
@@ -10,7 +11,11 @@ abstract class Creature {
     public energy: number = 100;
     public abstract type: number;
     public abstract collection: CreatureCollection<any>;
-    public radius: number = 1;
+    protected _radius: number = 1;
+
+    public get radius(): number {
+        return this._radius;
+    }
 
     constructor(position: Position) {
         this.position = position;
@@ -42,7 +47,11 @@ abstract class Creature {
         return new Collection(result);
     }
 
-    protected hasCell(index: number, type: number = this.type, radius: number = this.radius): boolean {
+    protected hasCell(
+        index: number | number[],
+        type: number = this.type,
+        radius: number = this.radius
+    ): boolean {
         const directions = this.getCoordinates(type, radius);
 
         for (let position of directions) {
@@ -61,7 +70,7 @@ abstract class Creature {
     }
 
     protected chooseCell(
-        index: number,
+        index: number | number[],
         type: number = this.type,
         radius: number = this.radius
     ): Collection<Position> {
@@ -83,12 +92,23 @@ abstract class Creature {
         return new Collection(found);
     }
 
-    protected chooseRandomCell(
-        index: number,
+    protected chooseRandomCell = (
+        index: number | number[],
         type: number = this.type,
         radius: number = this.radius
-    ): Position {
+    ): Position => {
         return this.chooseCell(index, type, radius).random();
+    };
+
+    public die = () => {
+        Matrix.setEmpty(this.position);
+
+        this.collection.deleteByPos(this.position);
+        Console.debug(`${this.collection.name}: die`);
+    };
+
+    public beEaten() {
+        this.die();
     }
 }
 

@@ -1,5 +1,4 @@
-import { ANIMAL_INDEX, PREDATOR_ID } from "../../../Constants/entities.js";
-import Console from "../../Services/Console/index.js";
+import { ANIMAL_INDEX, WOLF_ID } from "../../../Constants/entities.js";
 import Matrix from "../../Services/Matrix/index.js";
 import Entity from "../Entity/index.js";
 
@@ -8,30 +7,25 @@ abstract class Herbivorous extends Entity {
         super.registerActions();
 
         // ESCAPE
-        this.actions.register((entity) => {
-            if (
-                Matrix.getByPos(this.position) === this.index &&
-                entity.energy >= 20 &&
-                entity.hasCell(PREDATOR_ID, ANIMAL_INDEX)
-            ) {
-                this.escape();
-
-                return true;
-            }
-
-            return false;
-        });
+        this.actions
+            .when(
+                () =>
+                    Matrix.getByPos(this.position) === this.index &&
+                    this.energy >= 20 &&
+                    this.hasCell(WOLF_ID, ANIMAL_INDEX)
+            )
+            .do(this.escape);
     }
 
-    public escape() {
-        const predatorPos = this.chooseRandomCell(PREDATOR_ID);
+    public escape = () => {
+        const wolfPos = this.chooseRandomCell(WOLF_ID);
 
-        if (predatorPos) {
-            const position = this.diffCoordinates(predatorPos).random();
+        if (wolfPos) {
+            const position = this.diffCoordinates(wolfPos).random();
 
             this.move(position, 5, "escape");
         }
-    }
+    };
 }
 
 export default Herbivorous;
