@@ -1,14 +1,15 @@
 {
     "entitiesBirthsCount": {
-        "Grass": 512,
-        "Sheep.Male": 6,
-        "Sheep.Female": 4,
-        "Wolf.Female": 3,
-        "Wolf.Male": 1,
-        "Human.Male": 4,
-        "Rabbit.Female": 7,
-        "Rabbit.Male": 3
+        "Grass": 146,
+        "Sheep.Male": 5,
+        "Sheep.Female": 5,
+        "Wolf.Male": 2,
+        "Wolf.Female": 2,
+        "Human.Male": 2,
+        "Human.Female": 2,
+        "Rabbit.Male": 5,
+        "Rabbit.Female": 5
     },
-    "totalEventsCount": { "Meteorite Fall": 3, "Lightning": 2, "Tsunami": 1, "GameOver": 1 },
-    "totalTimesSeasonChanged": 17
+    "totalEventsCount": { "Tsunami": 1, "GameOver": 1 },
+    "totalTimesSeasonChanged": 10
 }
